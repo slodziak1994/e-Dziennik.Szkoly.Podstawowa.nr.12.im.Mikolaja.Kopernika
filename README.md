@@ -1,1 +1,1 @@
-# moja-strona
+E DZIENNIK.html
