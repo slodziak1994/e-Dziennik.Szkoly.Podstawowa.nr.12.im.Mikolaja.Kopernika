@@ -5,19 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>e-Dziennik</title>
     <style>
-        /* ... (Istniejący CSS - bez zmian z poprzedniej odpowiedzi, aby zaoszczędzić miejsce) ... */
-        /* Drobne poprawki/dodatki jeśli potrzebne */
+        :root {
+            --primary-bg: #f5f5f5;
+            --secondary-bg: white;
+            --text-color: #333;
+            --primary-color: #1e88e5;
+            --primary-darker-color: #0d47a1;
+            --primary-lighter-color: #e3f2fd;
+            --primary-hover-color: #f0f7ff;
+            --border-color: #ddd;
+            --shadow-color: rgba(0,0,0,0.1);
+            --header-gradient-start: #1e88e5;
+            --header-gradient-end: #0d47a1;
+            --button-text-color: white;
+            --table-header-bg: #e3f2fd;
+            --table-header-text: #0d47a1;
+            --input-bg: white;
+            --input-border: #ddd;
+            --input-text: #333;
+        }
+
+        body.dark-mode {
+            --primary-bg: #121212;
+            --secondary-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --primary-color: #3498db;
+            --primary-darker-color: #2980b9;
+            --primary-lighter-color: #2c3e50;
+            --primary-hover-color: #34495e;
+            --border-color: #333;
+            --shadow-color: rgba(255,255,255,0.05);
+            --header-gradient-start: #2c3e50;
+            --header-gradient-end: #1a252f;
+            --button-text-color: #e0e0e0;
+            --table-header-bg: #2c3e50;
+            --table-header-text: #e0e0e0;
+            --input-bg: #252525;
+            --input-border: #444;
+            --input-text: #e0e0e0;
+        }
+
+        /* Style ogólne */
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f5f5f5;
-            transition: all 0.3s;
+            background-color: var(--primary-bg);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
         }
         
-        /* Strona logowania */
         .login-page {
-            background: linear-gradient(135deg, #1e88e5, #0d47a1);
+            background: linear-gradient(135deg, var(--header-gradient-start), var(--header-gradient-end));
             height: 100vh;
             display: flex;
             justify-content: center;
@@ -25,17 +64,17 @@
         }
         
         .login-box {
-            background: white;
+            background: var(--secondary-bg);
             padding: 30px;
             border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px var(--shadow-color);
             width: 90%;
             max-width: 400px;
             text-align: center;
         }
         
         .login-logo {
-            color: #1e88e5;
+            color: var(--primary-color);
             font-size: 24px;
             margin-bottom: 20px;
         }
@@ -44,14 +83,16 @@
             width: 100%;
             padding: 12px;
             margin: 8px 0;
-            border: 1px solid #ddd;
+            border: 1px solid var(--input-border);
+            background-color: var(--input-bg);
+            color: var(--input-text);
             border-radius: 5px;
             box-sizing: border-box;
         }
         
         .login-btn, .admin-form button, .teacher-form button, .form-common button {
-            background: #1e88e5;
-            color: white;
+            background: var(--primary-color);
+            color: var(--button-text-color);
             border: none;
             padding: 12px;
             width: 100%;
@@ -62,265 +103,149 @@
         }
         
         .login-btn:hover, .admin-form button:hover, .teacher-form button:hover, .form-common button:hover {
-            background: #1565c0;
+            background: var(--primary-darker-color);
         }
         
-        .error-msg {
-            color: red;
-            margin-top: 10px;
-            min-height: 20px;
-        }
+        .error-msg { color: red; margin-top: 10px; min-height: 20px; }
         
-        /* Panel główny */
-        .main-page {
-            display: none;
-        }
+        .main-page { display: none; }
         
         .header {
-            background: linear-gradient(135deg, #1e88e5, #0d47a1);
+            background: linear-gradient(135deg, var(--header-gradient-start), var(--header-gradient-end));
             color: white;
             padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 5px var(--shadow-color);
         }
         
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .user-info { display: flex; align-items: center; gap: 10px; }
         
         .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+            width: 40px; height: 40px; border-radius: 50%;
             background-color: white;
-            color: #1e88e5;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
+            color: var(--primary-color);
+            display: flex; align-items: center; justify-content: center; font-weight: bold;
         }
         
-        .logout-btn {
+        .logout-btn, .theme-toggle-btn {
             background: white;
-            color: #1e88e5;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
+            color: var(--primary-color);
+            border: none; padding: 8px 15px; border-radius: 5px;
+            cursor: pointer; font-weight: bold; margin-left: 10px;
         }
-        
-        .container {
-            display: flex;
-            min-height: calc(100vh - 70px); /* Adjusted for header height */
-        }
-        
-        /* Panel boczny */
-        .sidebar {
-            width: 250px;
-            background: white;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-            padding: 20px 0;
-            overflow-y: auto;
-        }
-        
-        .sidebar-menu {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        
-        .sidebar-menu li {
-            padding: 12px 20px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            display: flex; /* For icon alignment */
-            align-items: center; /* For icon alignment */
-            gap: 10px; /* Space between icon and text */
-        }
-        
-        .sidebar-menu li:hover {
-            background-color: #f0f7ff;
-        }
-        
-        .sidebar-menu li.active {
-            background-color: #e3f2fd;
-            border-left: 4px solid #1e88e5;
-            padding-left: 16px; /* Adjust for border */
+         .logout-btn:hover, .theme-toggle-btn:hover {
+            background-color: #f0f0f0;
         }
 
-        .sidebar-menu li i {
-            width: 20px; /* Ensure icons take up same space */
-            text-align: center;
+        .container { display: flex; min-height: calc(100vh - 70px); }
+        
+        .sidebar {
+            width: 250px; background: var(--secondary-bg);
+            box-shadow: 2px 0 5px var(--shadow-color);
+            padding: 20px 0; overflow-y: auto;
         }
         
-        .user-details {
-            padding: 20px;
-            border-bottom: 1px solid #eee;
-            margin-bottom: 10px;
+        .sidebar-menu { list-style: none; padding: 0; margin: 0; }
+        
+        .sidebar-menu li {
+            padding: 12px 20px; cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex; align-items: center; gap: 10px;
         }
         
-        .user-details .special-number {
-            font-size: 12px;
-            color: #666;
-            margin-top: 5px;
-        }
+        .sidebar-menu li:hover { background-color: var(--primary-hover-color); }
         
-        /* Główna zawartość */
-        .main-content {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
+        .sidebar-menu li.active {
+            background-color: var(--primary-lighter-color);
+            border-left: 4px solid var(--primary-color);
+            padding-left: 16px; 
         }
+
+        .sidebar-menu li i { width: 20px; text-align: center; }
+        
+        .user-details { padding: 20px; border-bottom: 1px solid var(--border-color); margin-bottom: 10px; }
+        .user-details .special-number { font-size: 12px; color: #666; margin-top: 5px; }
+        body.dark-mode .user-details .special-number { color: #aaa; }
+        
+        .main-content { flex: 1; padding: 20px; overflow-y: auto; }
         
         .panel {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background: var(--secondary-bg);
+            padding: 20px; border-radius: 8px;
+            box-shadow: 0 2px 5px var(--shadow-color);
             margin-bottom: 20px;
         }
 
-        .panel h2, .panel h3 {
-            color: #0d47a1;
-        }
+        .panel h2, .panel h3 { color: var(--primary-darker-color); }
+        body.dark-mode .panel h2, body.dark-mode .panel h3 { color: var(--primary-color); }
         
-        /* Karty funkcji */
-        .function-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
+        .function-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; margin-top: 20px; }
         
         .function-card {
-            background: white;
-            border-radius: 8px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
+            background: var(--secondary-bg);
+            border-radius: 8px; padding: 20px; text-align: center;
+            box-shadow: 0 2px 5px var(--shadow-color);
+            cursor: pointer; transition: transform 0.3s, box-shadow 0.3s;
         }
+        .function-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px var(--shadow-color); }
+        .function-card i { font-size: 36px; color: var(--primary-color); margin-bottom: 10px; }
         
-        .function-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        
-        .function-card i {
-            font-size: 36px;
-            color: #1e88e5;
-            margin-bottom: 10px;
-        }
-        
-        /* Przycisk powrotu */
         .back-btn {
-            background: #1e88e5;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-bottom: 15px;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
+            background: var(--primary-color); color: var(--button-text-color);
+            border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer;
+            margin-bottom: 15px; display: inline-flex; align-items: center; gap: 5px;
         }
+        .back-btn:hover { background: var(--primary-darker-color); }
+        .back-btn i { font-size: 14px; }
         
-        .back-btn i {
-            font-size: 14px;
-        }
-        
-        /* Oceny */
         .grade {
-            display: inline-block;
-            width: 30px; /* Increased size */
-            height: 30px; /* Increased size */
-            line-height: 30px; /* Increased size */
-            text-align: center;
-            border-radius: 50%;
-            color: white;
-            font-weight: bold;
-            margin-right: 5px;
-            margin-bottom: 5px; /* For wrapping */
-            font-size: 14px; /* Adjusted font size */
+            display: inline-block; width: 30px; height: 30px; line-height: 30px;
+            text-align: center; border-radius: 50%; color: white; font-weight: bold;
+            margin-right: 5px; margin-bottom: 5px; font-size: 14px; 
         }
-        
-        .grade-6 { background-color: #2ecc71; } /* Celujący */
-        .grade-5 { background-color: #4CAF50; } /* Bardzo dobry */
-        .grade-4 { background-color: #8BC34A; } /* Dobry */
-        .grade-3 { background-color: #FFC107; } /* Dostateczny */
-        .grade-2 { background-color: #F44336; } /* Dopuszczający */
-        .grade-1 { background-color: #795548; } /* Niedostateczny */
-        .grade-P, .grade-p { background-color: #90caf9; } /* Plus */
-        .grade-M, .grade-m { background-color: #ef9a9a; } /* Minus */
+        .grade-6 { background-color: #2ecc71; } .grade-5 { background-color: #4CAF50; }
+        .grade-4 { background-color: #8BC34A; } .grade-3 { background-color: #FFC107; }
+        .grade-2 { background-color: #F44336; } .grade-1 { background-color: #795548; }
+        .grade-P, .grade-p { background-color: #90caf9; } .grade-M, .grade-m { background-color: #ef9a9a; }
 
-        /* Table styles */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #e3f2fd;
-            color: #0d47a1;
-        }
-        .action-btn {
-            padding: 5px 10px;
-            margin-right: 5px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            color: white;
-        }
-        .btn-edit { background-color: #ffc107; }
-        .btn-delete { background-color: #f44336; }
-        .btn-view { background-color: #1e88e5; }
-        .btn-reply { background-color: #4caf50;}
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid var(--border-color); padding: 8px; text-align: left; }
+        th { background-color: var(--table-header-bg); color: var(--table-header-text); }
+        
+        .action-btn { padding: 5px 10px; margin-right: 5px; border: none; border-radius: 4px; cursor: pointer; color: white; }
+        .btn-edit { background-color: #ffc107; } .btn-delete { background-color: #f44336; }
+        .btn-view { background-color: #1e88e5; } .btn-reply { background-color: #4caf50;}
+        body.dark-mode .btn-view { background-color: var(--primary-color); }
+
 
         .form-common label, .admin-form label, .teacher-form label {
-            display: block;
-            margin-top: 10px;
-            text-align: left;
-            color: #333;
-            font-weight: bold;
+            display: block; margin-top: 10px; text-align: left;
+            color: var(--text-color); font-weight: bold;
         }
         .message-item {
-            border: 1px solid #eee;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            cursor: pointer;
+            border: 1px solid var(--border-color); padding: 10px;
+            margin-bottom: 10px; border-radius: 5px; cursor: pointer;
+            background-color: var(--secondary-bg);
         }
-        .message-item:hover { background-color: #f9f9f9; }
-        .message-item.unread { font-weight: bold; background-color: #e3f2fd; }
+        .message-item:hover { background-color: var(--primary-hover-color); }
+        .message-item.unread { font-weight: bold; background-color: var(--primary-lighter-color); }
+        body.dark-mode .message-item.unread { color: #121212; }
 
-        .timetable table { border: 1px solid #ccc; }
+        .timetable table { border: 1px solid var(--border-color); }
         .timetable th, .timetable td { text-align: center; min-width: 80px; height: 40px; }
-        .timetable th:first-child, .timetable td:first-child { background-color: #f0f0f0; font-weight: bold; } /* Godziny/Okresy */
+        .timetable th:first-child, .timetable td:first-child { background-color: var(--primary-hover-color); font-weight: bold; } 
 
         .tabs { margin-bottom: 15px; }
         .tabs button {
-            padding: 10px 15px;
-            cursor: pointer;
-            border: 1px solid #ccc;
-            background-color: #f0f0f0;
-            margin-right: 5px;
-            border-bottom: none;
-            border-radius: 5px 5px 0 0;
+            padding: 10px 15px; cursor: pointer; border: 1px solid var(--border-color);
+            background-color: var(--primary-hover-color); color: var(--text-color);
+            margin-right: 5px; border-bottom: none; border-radius: 5px 5px 0 0;
         }
-        .tabs button.active { background-color: white; border-bottom: 1px solid white; }
-        hr { margin: 20px 0; border: 0; border-top: 1px solid #eee;}
+        .tabs button.active { background-color: var(--secondary-bg); border-bottom: 1px solid var(--secondary-bg); }
+        hr { margin: 20px 0; border: 0; border-top: 1px solid var(--border-color);}
+        .poll-option label {font-weight: normal; margin-left: 5px;}
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -341,7 +266,9 @@
                 <div class="user-avatar" id="userAvatar">U</div>
                 <h2 id="welcomeText">e-Dziennik</h2>
             </div>
-            <button class="logout-btn" onclick="logout()">Wyloguj</button>
+            <div> <button class="theme-toggle-btn" onclick="toggleTheme()" id="themeToggleBtn"><i class="fas fa-moon"></i></button>
+                <button class="logout-btn" onclick="logout()">Wyloguj</button>
+            </div>
         </div>
         
         <div class="container">
@@ -350,6 +277,7 @@
                     <div class="special-number" id="userSpecialNumber"></div>
                     <div>Jesteś zalogowany jako: <br><strong id="loggedUserName"></strong></div>
                     <div id="userRoleDisplay" style="font-size: 0.9em; color: #555; margin-top: 5px;"></div>
+                     <body.dark-mode div id="userRoleDisplay" style="font-size: 0.9em; color: #aaa; margin-top: 5px;"></body>
                 </div>
                 <ul class="sidebar-menu" id="sidebarMenu">
                     <li class="active" onclick="showMainView()"><i class="fas fa-home"></i> Strona główna</li>
@@ -360,18 +288,16 @@
                     <li onclick="showSection('announcements')" data-role="student teacher admin"><i class="fas fa-bullhorn"></i> Ogłoszenia</li>
                     <li onclick="showSection('calendar')" data-role="student teacher admin"><i class="fas fa-calendar-alt"></i> Terminarz</li>
                     
-                    <li onclick="showSection('organization')" data-role="student teacher admin"><i class="fas fa-users"></i> Organizacja</li>
-                    <li onclick="showSection('studentInfo')" data-role="student"><i class="fas fa-user-graduate"></i> Moje dane</li>
+                    <li onclick="showSection('organization')" data-role="student teacher admin"><i class="fas fa-sitemap"></i> Organizacja</li> <li onclick="showSection('studentInfo')" data-role="student"><i class="fas fa-user-graduate"></i> Moje dane</li>
                     <li onclick="showSection('polls')" data-role="student teacher admin"><i class="fas fa-poll"></i> Ankiety</li>
-                    <li onclick="showSection('books')" data-role="student teacher admin"><i class="fas fa-book"></i> Książki</li>
-                    
-                    <li onclick="showSection('teacherGradeManagement')" data-role="teacher"><i class="fas fa-edit"></i> Zarządzaj ocenami</li>
+                    <li onclick="showSection('books')" data-role="student teacher admin"><i class="fas fa-book-open"></i> Książki/Materiały</li> <li onclick="showSection('teacherGradeManagement')" data-role="teacher"><i class="fas fa-edit"></i> Zarządzaj ocenami</li>
                     <li onclick="showSection('teacherAttendanceManagement')" data-role="teacher"><i class="fas fa-user-clock"></i> Zarządzaj frekwencją</li>
                     <li onclick="showSection('teacherStudentsView')" data-role="teacher"><i class="fas fa-chalkboard-teacher"></i> Moi uczniowie</li>
 
                     <li onclick="showSection('adminUserManagement')" data-role="admin"><i class="fas fa-users-cog"></i> Zarządzaj użytkownikami</li>
                     <li onclick="showSection('adminClassManagement')" data-role="admin"><i class="fas fa-school"></i> Zarządzaj klasami</li>
-                    <li onclick="showSection('adminTimetableManagement')" data-role="admin"><i class="fas fa-edit"></i> Zarządzaj planem lekcji</li>
+                    <li onclick="showSection('adminTimetableManagement')" data-role="admin"><i class="fas fa-tasks"></i> Zarządzaj planem lekcji</li> <li onclick="showSection('adminPollManagement')" data-role="admin teacher"><i class="fas fa-plus-square"></i> Zarządzaj Ankietami</li> <li onclick="showSection('adminBookManagement')" data-role="admin teacher"><i class="fas fa-book-medical"></i> Zarządzaj Książkami</li>
+
 
                     <li onclick="showSection('settings')" data-role="student teacher admin"><i class="fas fa-cog"></i> Ustawienia</li>
                     <li onclick="showSection('help')" data-role="student teacher admin"><i class="fas fa-question-circle"></i> Pomoc</li>
@@ -390,21 +316,102 @@
                         <div class="function-card" onclick="showSection('messages')" data-role="student teacher admin"> <i class="fas fa-envelope"></i><h3>Wiadomości</h3> </div>
                         <div class="function-card" onclick="showSection('announcements')" data-role="student teacher admin"> <i class="fas fa-bullhorn"></i><h3>Ogłoszenia</h3> </div>
                         <div class="function-card" onclick="showSection('calendar')" data-role="student teacher admin"> <i class="fas fa-calendar-alt"></i><h3>Terminarz</h3> </div>
+                        <div class="function-card" onclick="showSection('polls')" data-role="student teacher admin"> <i class="fas fa-poll"></i><h3>Ankiety</h3> </div>
+                        <div class="function-card" onclick="showSection('books')" data-role="student teacher admin"> <i class="fas fa-book-open"></i><h3>Książki/Materiały</h3> </div>
+
                         <div class="function-card" onclick="showSection('teacherGradeManagement')" data-role="teacher"> <i class="fas fa-edit"></i><h3>Zarządzaj Ocenami</h3> </div>
                         <div class="function-card" onclick="showSection('teacherAttendanceManagement')" data-role="teacher"> <i class="fas fa-user-clock"></i><h3>Zarządzaj Frekwencją</h3> </div>
+                        
                         <div class="function-card" onclick="showSection('adminUserManagement')" data-role="admin"> <i class="fas fa-users-cog"></i><h3>Zarządzaj Użytkownikami</h3> </div>
                         <div class="function-card" onclick="showSection('adminClassManagement')" data-role="admin"> <i class="fas fa-school"></i><h3>Zarządzaj Klasami</h3> </div>
-                        <div class="function-card" onclick="showSection('adminTimetableManagement')" data-role="admin"> <i class="fas fa-edit"></i><h3>Zarządzaj Planem Lekcji</h3> </div>
+                        <div class="function-card" onclick="showSection('adminTimetableManagement')" data-role="admin"> <i class="fas fa-tasks"></i><h3>Zarządzaj Planem Lekcji</h3> </div>
+                        <div class="function-card" onclick="showSection('adminPollManagement')" data-role="admin teacher"> <i class="fas fa-plus-square"></i><h3>Zarządzaj Ankietami</h3> </div>
+                        <div class="function-card" onclick="showSection('adminBookManagement')" data-role="admin teacher"> <i class="fas fa-book-medical"></i><h3>Zarządzaj Książkami</h3> </div>
                          <div class="function-card" onclick="showSection('settings')" data-role="student teacher admin"><i class="fas fa-cog"></i><h3>Ustawienia</h3></div>
                     </div>
                 </div>
                 
                 <div id="gradesSection" class="panel" style="display: none;"> <button class="back-btn" onclick="showMainView()"><i class="fas fa-arrow-left"></i> Powrót</button> <h2>Twoje oceny</h2> <div id="studentGradesDetails"> <p>Ładowanie ocen...</p> </div> </div>
                 <div id="studentInfoSection" class="panel" style="display: none;"> <button class="back-btn" onclick="showMainView()"><i class="fas fa-arrow-left"></i> Powrót</button> <h2>Dane ucznia</h2> <div id="studentDetailsContent">Ładowanie danych...</div> </div>
-                <div id="organizationSection" class="panel" style="display: none;"> <button class="back-btn" onclick="showMainView()"><i class="fas fa-arrow-left"></i> Powrót</button> <h2>Organizacja</h2> <p>Informacje o strukturze szkoły, kontakty do sekretariatu, dyrekcji itp. (Treść statyczna)</p> </div>
-                <div id="pollsSection" class="panel" style="display: none;"> <button class="back-btn" onclick="showMainView()"><i class="fas fa-arrow-left"></i> Powrót</button> <h2>Ankiety</h2> <p>W tym miejscu mogą pojawiać się ankiety szkolne do wypełnienia. (Funkcjonalność w budowie)</p> </div>
-                <div id="booksSection" class="panel" style="display: none;"> <button class="back-btn" onclick="showMainView()"><i class="fas fa-arrow-left"></i> Powrót</button> <h2>Książki</h2> <p>Lista lektur, podręczników, materiałów dodatkowych. (Funkcjonalność w budowie)</p> </div>
-                <div id="helpSection" class="panel" style="display: none;"> <button class="back-btn" onclick="showMainView()"><i class="fas fa-arrow-left"></i> Powrót</button> <h2>Pomoc</h2> <p>Instrukcje użytkowania e-Dziennika, FAQ, kontakt do pomocy technicznej. (Treść statyczna)</p> </div>
+                
+                <div id="organizationSection" class="panel" style="display: none;"> 
+                    <button class="back-btn" onclick="showMainView()"><i class="fas fa-arrow-left"></i> Powrót</button> 
+                    <h2>Organizacja Szkoły</h2> 
+                    <p>Witaj w sekcji Organizacja. Znajdziesz tutaj kluczowe informacje dotyczące funkcjonowania naszej szkoły.</p>
+                    <h3>Dyrekcja:</h3>
+                    <ul>
+                        <li>Dyrektor: </li>
+                        <li>Wicedyrektor: </li>
+                    </ul>
+                    <h3>Sekretariat:</h3>
+                    <p>Godziny otwarcia: </p>
+                    <p>Email: , Tel: </p>
+                    <h3>Kalendarz Roku Szkolnego:</h3>
+                    <ul>
+                        <li>Rozpoczęcie roku szkolnego: </li>
+                        <li>Zimowa przerwa świąteczna: </li>
+                        <li>Ferie zimowe: </li>
+                        <li>Wiosenna przerwa świąteczna: </li>
+                        <li>Zakończenie zajęć dydaktycznych: </li>
+                    </ul>
+                </div>
+                
+                <div id="pollsSection" class="panel" style="display: none;"> 
+                    <button class="back-btn" onclick="showMainView()"><i class="fas fa-arrow-left"></i> Powrót</button> 
+                    <h2>Ankiety</h2> 
+                    <div id="pollsListContainer">Ładowanie ankiet...</div>
+                    <div id="pollViewContainer" class="panel" style="display:none;">
+                        <button class="back-btn" onclick="hidePollView()"><i class="fas fa-arrow-left"></i> Wróć do listy ankiet</button>
+                        <h3 id="pollViewTitle"></h3>
+                        <div id="pollViewQuestions"></div>
+                        <button onclick="submitPoll()" data-role="student">Wyślij odpowiedzi (Symulacja)</button>
+                    </div>
+                </div>
+                 <div id="adminPollManagementSection" class="panel form-common" style="display: none;" data-role="admin teacher">
+                    <button class="back-btn" onclick="showMainView()"><i class="fas fa-arrow-left"></i> Powrót</button>
+                    <h2>Zarządzanie Ankietami</h2>
+                    <h3>Dodaj nową ankietę (uproszczone)</h3>
+                    <label for="adminPollTitle">Tytuł ankiety:</label>
+                    <input type="text" id="adminPollTitle" placeholder="Wpisz tytuł ankiety">
+                    <p><small>Uwaga: W tej wersji można dodać tylko tytuł ankiety. Pytania i opcje dla przykładu poniżej są stałe.</small></p>
+                    <button onclick="addPollByAdmin()">Dodaj Ankietę</button>
+                    <div id="adminPollsListContainer" style="margin-top:20px;"><h3>Istniejące Ankiety (tytuły):</h3></div>
+                </div>
+
+                <div id="booksSection" class="panel" style="display: none;"> 
+                    <button class="back-btn" onclick="showMainView()"><i class="fas fa-arrow-left"></i> Powrót</button> 
+                    <h2>Książki i Materiały</h2> 
+                    <div id="booksListContainer">Ładowanie listy książek...</div>
+                </div>
+                 <div id="adminBookManagementSection" class="panel form-common" style="display: none;" data-role="admin teacher">
+                    <button class="back-btn" onclick="showMainView()"><i class="fas fa-arrow-left"></i> Powrót</button>
+                    <h2>Zarządzanie Książkami/Materiałami</h2>
+                    <h3>Dodaj nową pozycję</h3>
+                    <label for="adminBookTitle">Tytuł:</label>
+                    <input type="text" id="adminBookTitle" placeholder="Tytuł książki/materiału">
+                    <label for="adminBookAuthor">Autor:</label>
+                    <input type="text" id="adminBookAuthor" placeholder="Autor (jeśli dotyczy)">
+                    <label for="adminBookSubject">Przedmiot:</label>
+                    <input type="text" id="adminBookSubject" placeholder="Przedmiot (np. Matematyka, J. Polski)">
+                    <label for="adminBookDescription">Opis/Link:</label>
+                    <textarea id="adminBookDescription" rows="3" placeholder="Krótki opis lub link do materiału"></textarea>
+                    <button onclick="addBookByAdmin()">Dodaj Książkę/Materiał</button>
+                    <div id="adminBooksListManagementContainer" style="margin-top:20px;"><h3>Dodane pozycje:</h3></div>
+                </div>
+
+
+                <div id="helpSection" class="panel" style="display: none;"> 
+                    <button class="back-btn" onclick="showMainView()"><i class="fas fa-arrow-left"></i> Powrót</button> 
+                    <h2>Pomoc</h2> 
+                    <h3>Najczęściej Zadawane Pytania (FAQ)</h3>
+                    <p><strong>P: Jak sprawdzić swoje oceny?</strong><br></p>
+                    <p><strong>P: Gdzie znajdę plan lekcji?</strong><br></p>
+                    <p><strong>P: Jak wysłać wiadomość do nauczyciela?</strong><br></p>
+                    <h3>Kontakt do Wsparcia Technicznego</h3>
+                    <p>W przypadku problemów technicznych z e-Dziennikiem, prosimy o kontakt:</p>
+                    <p>Email: </p>
+                    <p>Tel: </p>
+                </div>
 
                 <div id="teacherGradeManagementSection" class="panel teacher-form" style="display: none;"> <button class="back-btn" onclick="showMainView()"><i class="fas fa-arrow-left"></i> Powrót</button> <h2>Zarządzanie Ocenami</h2> <label for="teacherSubjectSelectGrade">Przedmiot:</label> <select id="teacherSubjectSelectGrade" onchange="renderTeacherGradeManagementTable()"></select> <label for="teacherStudentSelectGrade">Uczeń:</label> <select id="teacherStudentSelectGrade"></select> <label for="teacherGradeValueInput">Ocena:</label> <input type="text" id="teacherGradeValueInput" placeholder="np. 5, 4+, 3-"> <label for="teacherGradeDescriptionInput">Opis/Waga (opcjonalnie):</label> <input type="text" id="teacherGradeDescriptionInput" placeholder="np. Sprawdzian, Kartkówka (waga 3)"> <button onclick="addGradeByTeacher()">Dodaj Ocenę</button> <h3>Oceny wystawione (<span id="currentTeacherSubjectDisplay"></span>):</h3> <div id="teacherGradesTableContainer"></div> </div>
                 <div id="teacherStudentsViewSection" class="panel" style="display: none;"> <button class="back-btn" onclick="showMainView()"><i class="fas fa-arrow-left"></i> Powrót</button> <h2>Moi Uczniowie</h2> <div id="teacherStudentsListContainer"></div> </div>
@@ -412,25 +419,9 @@
                 <div id="adminUserManagementSection" class="panel admin-form" style="display: none;"> <button class="back-btn" onclick="showMainView()"><i class="fas fa-arrow-left"></i> Powrót</button> <h2>Zarządzanie Użytkownikami</h2> <h3>Dodaj nowego użytkownika</h3> <label for="adminAddUserLogin">Login:</label> <input type="text" id="adminAddUserLogin" placeholder="Login"> <label for="adminAddUserPassword">Hasło:</label> <input type="password" id="adminAddUserPassword" placeholder="Hasło"> <label for="adminAddUserName">Imię i Nazwisko:</label> <input type="text" id="adminAddUserName" placeholder="Imię i nazwisko"> <label for="adminAddUserRole">Rola:</label> <select id="adminAddUserRole" onchange="toggleAdminUserFields()"> <option value="student">Uczeń</option> <option value="teacher">Nauczyciel</option> <option value="admin">Administrator</option> </select> <div id="adminStudentFields" style="display: block;"> <label for="adminAddUserClass">Klasa (dla ucznia):</label> <select id="adminAddUserClass"></select> <label for="adminAddUserSpecialNumber">Szczęśliwy Numerek (dla ucznia):</label> <input type="text" id="adminAddUserSpecialNumber" placeholder="np. 12, hj"> </div> <div id="adminTeacherFields" style="display: none;"> <label for="adminAddUserSubjects">Przedmioty (dla nauczyciela, oddzielone przecinkami):</label> <input type="text" id="adminAddUserSubjects" placeholder="np. Matematyka, Fizyka"> <label for="adminAddUserTeacherClasses">Przypisane klasy (ID klas, oddzielone przecinkami):</label> <input type="text" id="adminAddUserTeacherClasses" placeholder="np. 1, 2"> </div> <button onclick="addUserByAdmin()">Dodaj użytkownika</button> <h3>Lista użytkowników</h3> <div id="adminUserListContainer"></div> </div>
                 <div id="adminClassManagementSection" class="panel admin-form" style="display: none;"> <button class="back-btn" onclick="showMainView()"><i class="fas fa-arrow-left"></i> Powrót</button> <h2>Zarządzanie Klasami</h2> <h3>Dodaj nową klasę</h3> <label for="adminAddClassName">Nazwa klasy:</label> <input type="text" id="adminAddClassName" placeholder="np. 1A, 3C Technik Informatyk"> <label for="adminAddClassTeacher">Wychowawca (opcjonalnie, ID nauczyciela):</label> <select id="adminAddClassTeacher"></select> <button onclick="addClassByAdmin()">Dodaj klasę</button> <h3>Lista klas</h3> <div id="adminClassListContainer"></div> </div>
 
-                <div id="attendanceSection" class="panel" style="display: none;">
-                    <button class="back-btn" onclick="showMainView()"><i class="fas fa-arrow-left"></i> Powrót</button>
-                    <h2>Frekwencja</h2>
-                    <div id="studentAttendanceListContainer" data-role="student">Ładowanie frekwencji...</div>
-                    <div data-role="teacher" style="display:none;"><p>Zarządzanie frekwencją przez nauczyciela - patrz osobna sekcja.</p></div>
-                </div>
+                <div id="attendanceSection" class="panel" style="display: none;"> <button class="back-btn" onclick="showMainView()"><i class="fas fa-arrow-left"></i> Powrót</button> <h2>Frekwencja</h2> <div id="studentAttendanceListContainer" data-role="student">Ładowanie frekwencji...</div> <div data-role="teacher" style="display:none;"><p>Przejdź do "Zarządzaj frekwencją" aby edytować.</p></div> </div>
 
-                <div id="teacherAttendanceManagementSection" class="panel teacher-form" style="display: none;">
-                    <button class="back-btn" onclick="showMainView()"><i class="fas fa-arrow-left"></i> Powrót</button>
-                   <h2>Zarządzanie Frekwencją</h2>
-                   <label for="attTeacherClassSelect">Wybierz klasę:</label>
-                   <select id="attTeacherClassSelect" onchange="renderTeacherAttendanceEditor()"></select>
-                   <label for="attDateSelect">Data:</label>
-                   <input type="date" id="attDateSelect" onchange="renderTeacherAttendanceEditor()">
-                   <label for="attSubjectSelect">Przedmiot/Godzina lekcyjna:</label>
-                   <select id="attSubjectSelect" onchange="renderTeacherAttendanceEditor()"></select> 
-                   <div id="teacherAttendanceEditorContainer"></div>
-                   <button onclick="saveTeacherAttendanceChanges()">Zapisz zmiany frekwencji</button>
-               </div>
+                <div id="teacherAttendanceManagementSection" class="panel teacher-form" style="display: none;"> <button class="back-btn" onclick="showMainView()"><i class="fas fa-arrow-left"></i> Powrót</button> <h2>Zarządzanie Frekwencją</h2> <label for="attTeacherClassSelect">Wybierz klasę:</label> <select id="attTeacherClassSelect" onchange="populateAttSubjectSelect(); renderTeacherAttendanceEditor();"></select> <label for="attDateSelect">Data:</label> <input type="date" id="attDateSelect" onchange="populateAttSubjectSelect(); renderTeacherAttendanceEditor();"> <label for="attSubjectOrLessonSelect">Lekcja (Przedmiot / Godzina):</label> <select id="attSubjectOrLessonSelect" onchange="renderTeacherAttendanceEditor()"></select>  <div id="teacherAttendanceEditorContainer"></div> <button onclick="saveTeacherAttendanceChanges()">Zapisz zmiany frekwencji</button> </div>
 
                 <div id="timetableSection" class="panel timetable" style="display: none;"> <button class="back-btn" onclick="showMainView()"><i class="fas fa-arrow-left"></i> Powrót</button> <h2>Plan Lekcji</h2> <div id="timetableDisplayOptions" data-role="admin teacher"> <label for="timetableClassSelect">Wybierz klasę:</label> <select id="timetableClassSelect" onchange="renderTimetable()"></select> </div> <div id="timetableContainer"></div> </div>
 
@@ -442,23 +433,7 @@
                 
                 <div id="adminTimetableManagementSection" class="panel admin-form" style="display:none;"> <button class="back-btn" onclick="showMainView()"><i class="fas fa-arrow-left"></i> Powrót</button> <h2>Zarządzanie Planem Lekcji</h2> <label for="adminTimetableClassSelect">Wybierz klasę do edycji:</label> <select id="adminTimetableClassSelect" onchange="renderAdminTimetableEditor()"></select> <h3>Dodaj/Edytuj pozycję w planie</h3> <input type="hidden" id="adminTimetableEntryId"> <label for="adminTimetableDay">Dzień tygodnia:</label> <select id="adminTimetableDay"> <option value="1">Poniedziałek</option> <option value="2">Wtorek</option> <option value="3">Środa</option> <option value="4">Czwartek</option> <option value="5">Piątek</option> </select> <label for="adminTimetablePeriod">Okres (np. 1, 2, 8:00-8:45):</label> <input type="text" id="adminTimetablePeriod" placeholder="np. 1 lub 8:00-8:45"> <label for="adminTimetableSubject">Przedmiot:</label> <input type="text" id="adminTimetableSubject" placeholder="Nazwa przedmiotu"> <label for="adminTimetableTeacher">Nauczyciel:</label> <select id="adminTimetableTeacherSelect"></select> <label for="adminTimetableRoom">Sala:</label> <input type="text" id="adminTimetableRoom" placeholder="Numer sali"> <button onclick="saveTimetableEntryByAdmin()">Zapisz Pozycję</button> <button onclick="clearAdminTimetableForm()" style="background-color:#aaa; margin-top:5px;">Wyczyść Formularz</button> <h3>Aktualny plan dla wybranej klasy:</h3> <div id="adminTimetablePreviewContainer" class="timetable"></div> </div>
                 
-                <div id="settingsSection" class="panel form-common" style="display: none;">
-                    <button class="back-btn" onclick="showMainView()"><i class="fas fa-arrow-left"></i> Powrót</button>
-                    <h2>Ustawienia Konta</h2>
-                    <h3>Zmień wyświetlaną nazwę</h3>
-                    <label for="settingCurrentName">Aktualna nazwa:</label>
-                    <input type="text" id="settingCurrentName" readonly style="background-color: #eee;">
-                    <label for="settingNewName">Nowa nazwa:</label>
-                    <input type="text" id="settingNewName" placeholder="Wpisz nową nazwę">
-                    <button onclick="updateUserDisplayName()">Zapisz nową nazwę</button>
-                    <hr>
-                    <h3>Zmiana Hasła</h3>
-                    <p>Zmiana hasła w tej wersji demonstracyjnej nie jest w pełni bezpieczna i nie została zaimplementowana. W pełnej wersji systemu ta opcja wymagałaby dodatkowych zabezpieczeń po stronie serwera.</p>
-                    <hr>
-                    <h3>Motyw (Symulacja)</h3>
-                    <button onclick="alert('Zmiana motywu - funkcjonalność w budowie!')">Zmień na ciemny (Symulacja)</button>
-                </div>
-
+                <div id="settingsSection" class="panel form-common" style="display: none;"> <button class="back-btn" onclick="showMainView()"><i class="fas fa-arrow-left"></i> Powrót</button> <h2>Ustawienia Konta</h2> <h3>Zmień wyświetlaną nazwę</h3> <label for="settingCurrentName">Aktualna nazwa:</label> <input type="text" id="settingCurrentName" readonly style="background-color: var(--input-bg); border: 1px solid var(--input-border); color: var(--input-text);"> <label for="settingNewName">Nowa nazwa:</label> <input type="text" id="settingNewName" placeholder="Wpisz nową nazwę"> <button onclick="updateUserDisplayName()">Zapisz nową nazwę</button> <hr> <h3>Zmiana Hasła</h3> <label for="currentPassword">Aktualne hasło:</label> <input type="password" id="currentPassword" placeholder="Wpisz aktualne hasło"> <label for="newPassword">Nowe hasło:</label> <input type="password" id="newPassword" placeholder="Wpisz nowe hasło"> <label for="confirmNewPassword">Potwierdź nowe hasło:</label> <input type="password" id="confirmNewPassword" placeholder="Powtórz nowe hasło"> <button onclick="changePassword()">Zmień hasło</button> <hr> <h3>Motyw</h3> <button onclick="toggleTheme()" id="settingsThemeToggleBtn">Zmień Motyw</button> </div>
             </div>
         </div>
     </div>
@@ -467,8 +442,7 @@
     // --- DATA STORE (Simulated Database using localStorage) ---
     let loggedInUser = null;
 
-    // Default data - will be overridden by localStorage if available
-    let initialUsers = [ /* ... bez zmian ... */ 
+    let initialUsers = [
         { id: 1, login: "admin", password: "admin123", name: "Administrator Adminowski", role: "admin" },
         { id: 2, login: "nauczyciel", password: "nauczyciel123", name: "Jan Nauczycielski", role: "teacher", subjects: ["Matematyka", "Informatyka"], classIds: [101, 102] },
         { id: 3, login: "nauczyciel2", password: "nauczyciel123", name: "Anna Pedagog", role: "teacher", subjects: ["Język Polski", "Historia"], classIds: [101] },
@@ -476,51 +450,51 @@
         { id: 11, login: "uczen2", password: "uczen123", name: "Anna Kowalska", role: "student", classId: 101, specialNumber: "7" },
         { id: 12, login: "uczen3", password: "uczen123", name: "Piotr Nowak", role: "student", classId: 102, specialNumber: "15" }
     ];
-    let initialClasses = [ /* ... bez zmian ... */ 
+    let initialClasses = [
         { id: 101, name: "Klasa 1A TI", teacherId: 2 }, 
         { id: 102, name: "Klasa 2B LO", teacherId: null }
     ];
-    let initialGrades = [ /* ... bez zmian ... */ 
-        { id: 1, studentId: 10, subject: "Matematyka", value: "5", description: "Sprawdzian", date: "2025-05-10", teacherId: 2},
-        { id: 2, studentId: 10, subject: "Matematyka", value: "4", description: "Kartkówka", date: "2025-05-15", teacherId: 2},
-        { id: 3, studentId: 10, subject: "Informatyka", value: "5+", description: "Projekt", date: "2025-05-20", teacherId: 2},
-        { id: 4, studentId: 11, subject: "Matematyka", value: "3", description: "Odpowiedź", date: "2025-05-12", teacherId: 2},
-        { id: 5, studentId: 10, subject: "Język Polski", value: "4-", description: "Wypracowanie", date: "2025-05-18", teacherId: 3},
+    let initialGrades = [
+        { id: 1, studentId: 10, subject: "Matematyka", value: "5", description: "Sprawdzian", date: "2025-05-10", teacherId: 2}, { id: 2, studentId: 10, subject: "Matematyka", value: "4", description: "Kartkówka", date: "2025-05-15", teacherId: 2}, { id: 3, studentId: 10, subject: "Informatyka", value: "5+", description: "Projekt", date: "2025-05-20", teacherId: 2}, { id: 4, studentId: 11, subject: "Matematyka", value: "3", description: "Odpowiedź", date: "2025-05-12", teacherId: 2}, { id: 5, studentId: 10, subject: "Język Polski", value: "4-", description: "Wypracowanie", date: "2025-05-18", teacherId: 3},
     ];
-    let initialAttendance = [ // Dodano przykładowe dane
-        {id: 1, studentId: 10, date: "2025-05-27", subject: "Matematyka", status: "obecny", teacherId: 2},
-        {id: 2, studentId: 10, date: "2025-05-28", subject: "Język Polski", status: "spóźniony", teacherId: 3},
-        {id: 3, studentId: 10, date: "2025-05-29", subject: "Informatyka", status: "nieobecny (uspraw.)", teacherId: 2},
-        {id: 4, studentId: 11, date: "2025-05-27", subject: "Matematyka", status: "nieobecny", teacherId: 2},
+    let initialAttendance = [ 
+        {id: 1, studentId: 10, date: "2025-05-27", subjectLesson: "Matematyka - lekcja 1", status: "obecny", teacherId: 2},
+        {id: 2, studentId: 10, date: "2025-05-28", subjectLesson: "Język Polski - lekcja 2", status: "spóźniony", teacherId: 3},
+        {id: 3, studentId: 10, date: "2025-05-29", subjectLesson: "Informatyka - lekcja 3", status: "nieobecny (uspraw.)", teacherId: 2},
+        {id: 4, studentId: 11, date: "2025-05-27", subjectLesson: "Matematyka - lekcja 1", status: "nieobecny", teacherId: 2},
     ]; 
-    let initialAnnouncements = [ /* ... bez zmian ... */ 
+    let initialAnnouncements = [
         {id: 1, title: "Zebranie z rodzicami", content: "Zapraszamy na zebranie z rodzicami dnia 15.06.2025 o godzinie 17:00.", date: "2025-05-25", authorId: 1, authorName: "Administrator Adminowski", audience: "all"}
     ];
-    let initialTimetables = [ /* ... bez zmian ... */ 
-        {id:1, classId: 101, dayOfWeek: 1, period: "1 (8:00-8:45)", subject: "Matematyka", teacherId: 2, room: "101"},
-        {id:2, classId: 101, dayOfWeek: 1, period: "2 (8:55-9:40)", subject: "Język Polski", teacherId: 3, room: "203"},
-        {id:3, classId: 101, dayOfWeek: 2, period: "1 (8:00-8:45)", subject: "Informatyka", teacherId: 2, room: "LAB1"},
-        {id:4, classId: 102, dayOfWeek: 1, period: "1 (8:00-8:45)", subject: "Fizyka", teacherId: null, room: "305"},
+    let initialTimetables = [
+        {id:1, classId: 101, dayOfWeek: 1, period: "1 (8:00-8:45)", subject: "Matematyka", teacherId: 2, room: "101"}, {id:2, classId: 101, dayOfWeek: 1, period: "2 (8:55-9:40)", subject: "Język Polski", teacherId: 3, room: "203"}, {id:3, classId: 101, dayOfWeek: 2, period: "1 (8:00-8:45)", subject: "Informatyka", teacherId: 2, room: "LAB1"}, {id:4, classId: 102, dayOfWeek: 1, period: "1 (8:00-8:45)", subject: "Fizyka", teacherId: null, room: "305"},
     ];
-    let initialCalendarEvents = [ /* ... bez zmian ... */ 
-        {id: 1, title: "Wycieczka do Muzeum", date: "2025-06-10", description: "Wycieczka klasowa dla 1A TI do Muzeum Narodowego.", createdByUserId: 2, audience: "class_101"},
-        {id: 2, title: "Dzień Sportu", date: "2025-06-20", description: "Ogólnoszkolny Dzień Sportu. Obecność obowiązkowa.", createdByUserId: 1, audience: "all_students"}
+    let initialCalendarEvents = [
+        {id: 1, title: "Wycieczka do Muzeum", date: "2025-06-10", description: "Wycieczka klasowa dla 1A TI do Muzeum Narodowego.", createdByUserId: 2, audience: "class_101"}, {id: 2, title: "Dzień Sportu", date: "2025-06-20", description: "Ogólnoszkolny Dzień Sportu. Obecność obowiązkowa.", createdByUserId: 1, audience: "all_students"}
     ];
-    let initialMessages = [ /* ... bez zmian ... */ 
-        {id: 1, senderId: 2, recipientId: 10, title: "Poprawa sprawdzianu", content: "Gabrielu, proszę o kontakt w sprawie możliwości poprawy ostatniego sprawdzianu z matematyki.", date: "2025-05-20T10:00:00Z", read: false},
-        {id: 2, senderId: 1, recipientId: 2, title: "Spotkanie Rady Pedagogicznej", content: "Zapraszam na spotkanie Rady Pedagogicznej w najbliższy piątek o 15:00.", date: "2025-05-22T14:00:00Z", read: true}
+    let initialMessages = [
+        {id: 1, senderId: 2, recipientId: 10, title: "Poprawa sprawdzianu", content: "Gabrielu, proszę o kontakt w sprawie możliwości poprawy ostatniego sprawdzianu z matematyki.", date: "2025-05-20T10:00:00Z", read: false}, {id: 2, senderId: 1, recipientId: 2, title: "Spotkanie Rady Pedagogicznej", content: "Zapraszam na spotkanie Rady Pedagogicznej w najbliższy piątek o 15:00.", date: "2025-05-22T14:00:00Z", read: true}
+    ];
+    let initialPolls = [
+        {
+            id: 1, title: "Preferencje dotyczące wycieczki szkolnej", 
+            questions: [
+                { q_id: 1, text: "Dokąd chciałbyś/chciałabyś pojechać na wycieczkę?", options: [ {o_id:1, text:"Góry"}, {o_id:2, text:"Morze"}, {o_id:3, text:"Jeziora"} ], type: "single", answers: {} },
+                { q_id: 2, text: "Jakie aktywności preferujesz? (Wybierz max 2)", options: [ {o_id:4, text:"ZWIEDZANIE"}, {o_id:5, text:"SPORT"}, {o_id:6, text:"REKREACJA"} ], type: "multiple", answers: {} }
+            ],
+            createdByUserId: 1, audience: "all_students", isOpen: true
+        }
+    ];
+    let initialBooks = [
+        {id: 1, title: "Pan Tadeusz", author: "Adam Mickiewicz", subject: "Język Polski", description: "Lektura obowiązkowa dla klas maturalnych.", addedByUserId: 3},
+        {id: 2, title: "Zbiór zadań z matematyki - Matura 2025", author: "Nowak, Kowalski", subject: "Matematyka", description: "Zalecany zbiór zadań.", addedByUserId: 2}
     ];
 
-    let users = [];
-    let classes = [];
-    let grades = [];
-    let attendance = [];
-    let announcements = [];
-    let timetables = [];
-    let calendarEvents = [];
-    let messages = [];
+    let users = []; let classes = []; let grades = []; let attendance = [];
+    let announcements = []; let timetables = []; let calendarEvents = []; let messages = [];
+    let polls = []; let books = [];
 
-    function loadData() { /* ... bez zmian ... */ 
+    function loadData() { 
         users = JSON.parse(localStorage.getItem('eDziennik_users')) || JSON.parse(JSON.stringify(initialUsers));
         classes = JSON.parse(localStorage.getItem('eDziennik_classes')) || JSON.parse(JSON.stringify(initialClasses));
         grades = JSON.parse(localStorage.getItem('eDziennik_grades')) || JSON.parse(JSON.stringify(initialGrades));
@@ -529,10 +503,18 @@
         timetables = JSON.parse(localStorage.getItem('eDziennik_timetables')) || JSON.parse(JSON.stringify(initialTimetables));
         calendarEvents = JSON.parse(localStorage.getItem('eDziennik_calendarEvents')) || JSON.parse(JSON.stringify(initialCalendarEvents));
         messages = JSON.parse(localStorage.getItem('eDziennik_messages')) || JSON.parse(JSON.stringify(initialMessages));
+        polls = JSON.parse(localStorage.getItem('eDziennik_polls')) || JSON.parse(JSON.stringify(initialPolls));
+        books = JSON.parse(localStorage.getItem('eDziennik_books')) || JSON.parse(JSON.stringify(initialBooks));
         
+        // Załaduj motyw
+        const savedTheme = localStorage.getItem('eDziennik_theme') || 'light';
+        document.body.className = savedTheme === 'dark' ? 'dark-mode' : '';
+        updateThemeToggleButton(savedTheme);
+
         if (!localStorage.getItem('eDziennik_users')) saveData();
     }
-    function saveData() { /* ... bez zmian ... */ 
+    
+    function saveData() { 
         localStorage.setItem('eDziennik_users', JSON.stringify(users));
         localStorage.setItem('eDziennik_classes', JSON.stringify(classes));
         localStorage.setItem('eDziennik_grades', JSON.stringify(grades));
@@ -541,12 +523,13 @@
         localStorage.setItem('eDziennik_timetables', JSON.stringify(timetables));
         localStorage.setItem('eDziennik_calendarEvents', JSON.stringify(calendarEvents));
         localStorage.setItem('eDziennik_messages', JSON.stringify(messages));
-    }
-    function getNextId(array) { /* ... bez zmian ... */ 
-        return array.length > 0 ? Math.max(...array.map(item => item.id || 0)) + 1 : 1;
+        localStorage.setItem('eDziennik_polls', JSON.stringify(polls));
+        localStorage.setItem('eDziennik_books', JSON.stringify(books));
     }
     
-    function checkAuth() { /* ... bez zmian ... */ 
+    function getNextId(array) { return array.length > 0 ? Math.max(...array.map(item => item.id || 0)) + 1 : 1; }
+    
+    function checkAuth() {
         const userString = localStorage.getItem('eDziennik_loggedInUser');
         if (userString) {
             loggedInUser = JSON.parse(userString);
@@ -556,20 +539,31 @@
             document.getElementById('mainPage').style.display = 'none';
         }
     }
-    function login() { /* ... bez zmian ... */ 
+    
+    function login() {
         const usernameInput = document.getElementById('username').value.trim();
         const passwordInput = document.getElementById('password').value.trim();
         const errorElement = document.getElementById('loginError');
+        
         errorElement.textContent = "";
-        if (!usernameInput || !passwordInput) { errorElement.textContent = "Wprowadź login i hasło!"; return; }
+        
+        if (!usernameInput || !passwordInput) {
+            errorElement.textContent = "Wprowadź login i hasło!";
+            return;
+        }
+        
         const foundUser = users.find(u => u.login === usernameInput && u.password === passwordInput);
+        
         if (foundUser) {
             loggedInUser = foundUser;
             localStorage.setItem('eDziennik_loggedInUser', JSON.stringify(loggedInUser));
             showMainPage(loggedInUser);
-        } else { errorElement.textContent = "Błędny login lub hasło!"; }
+        } else {
+            errorElement.textContent = "Błędny login lub hasło!";
+        }
     }
-    function logout() { /* ... bez zmian ... */ 
+    
+    function logout() {
         localStorage.removeItem('eDziennik_loggedInUser');
         loggedInUser = null;
         document.getElementById('mainPage').style.display = 'none';
@@ -578,60 +572,67 @@
         document.getElementById('password').value = '';
         document.getElementById('loginError').textContent = '';
     }
-    function showMainPage(user) { /* ... Zaktualizowano, aby pokazać liczbę nieprzeczytanych wiadomości ... */
+    
+    function showMainPage(user) {
         document.getElementById('loginPage').style.display = 'none';
         document.getElementById('mainPage').style.display = 'block';
+        
         document.getElementById('welcomeText').textContent = `Witaj, ${user.name}!`;
         document.getElementById('userAvatar').textContent = user.name.charAt(0).toUpperCase();
         document.getElementById('loggedUserName').textContent = user.name;
         document.getElementById('userSpecialNumber').textContent = user.role === 'student' ? `Szczęśliwy numerek: ${user.specialNumber || 'brak'}` : '';
+        
         let roleName = "";
         if (user.role === 'admin') roleName = "Administrator";
         else if (user.role === 'teacher') roleName = "Nauczyciel";
         else if (user.role === 'student') roleName = "Uczeń";
+        
         document.getElementById('userRoleDisplay').textContent = `Rola: ${roleName}`;
-
+        
         updateSidebarForRole(user.role);
         updateFunctionCardsForRole(user.role);
-        updateUnreadMessagesCount(); // Dodano
-        showMainView(); 
+        updateUnreadMessagesCount();
+        showMainView();
     }
-    function updateSidebarForRole(role) { /* ... bez zmian ... */ 
-        const menuItems = document.querySelectorAll('#sidebarMenu li');
-        menuItems.forEach(item => {
+    
+    function updateSidebarForRole(role) {
+        document.querySelectorAll('#sidebarMenu li[data-role]').forEach(item => {
             const roles = item.dataset.role;
-            if (roles && !roles.split(' ').includes(role)) { item.style.display = 'none'; } 
-            else { item.style.display = 'flex'; }
+            item.style.display = (roles && !roles.split(' ').includes(role)) ? 'none' : 'flex';
         });
-        document.querySelectorAll('[id^="toggleAdd"][data-role], [data-role-form]').forEach(el => { // Dodano [data-role-form]
+        
+        document.querySelectorAll('[data-role-form], [id^="toggleAdd"][data-role]').forEach(el => {
             const roles = el.dataset.role || el.dataset.roleForm;
-             if (roles && !roles.split(' ').includes(role)) { el.style.display = 'none'; } 
-             else { el.style.display = el.tagName === 'BUTTON' ? 'inline-block' : 'block';}
+            if (roles && !roles.split(' ').includes(role)) {
+                el.style.display = 'none';
+            } else {
+                el.style.display = (el.tagName === 'BUTTON' || el.id.startsWith('toggleAdd')) ? 'inline-block' : 'block';
+            }
         });
     }
-    function updateFunctionCardsForRole(role) { /* ... bez zmian ... */ 
-        const cards = document.querySelectorAll('#mainView .function-card');
-        cards.forEach(card => {
+    
+    function updateFunctionCardsForRole(role) {
+        document.querySelectorAll('#mainView .function-card[data-role]').forEach(card => {
             const cardRoles = card.dataset.role;
-             if (cardRoles && !cardRoles.split(' ').includes(role)) { card.style.display = 'none'; } 
-             else { card.style.display = 'block';  }
+            card.style.display = (cardRoles && !cardRoles.split(' ').includes(role)) ? 'none' : 'block';
         });
     }
-    function showMainView() { /* ... bez zmian ... */ 
+    
+    function showMainView() {
         hideAllSections();
         document.getElementById('mainView').style.display = 'block';
         setActiveMenuItem(document.querySelector('.sidebar-menu li[onclick="showMainView()"]'));
     }
-    function showSection(sectionId) { // Zaktualizowano o nowe sekcje
+    
+    function showSection(sectionId) {
         hideAllSections();
         const sectionElement = document.getElementById(sectionId + 'Section');
+        
         if (sectionElement) {
             sectionElement.style.display = 'block';
+            
             if (sectionId === 'grades' && loggedInUser.role === 'student') renderStudentGrades();
-            if (sectionId === 'attendance') { // Obsługa frekwencji dla ucznia i nauczyciela
-                 if (loggedInUser.role === 'student') renderStudentAttendance();
-                 // Dla nauczyciela główny widok frekwencji może być informacyjny, a zarządzanie w teacherAttendanceManagementSection
-            }
+            if (sectionId === 'attendance') { if (loggedInUser.role === 'student') renderStudentAttendance(); }
             if (sectionId === 'studentInfo' && loggedInUser.role === 'student') renderStudentInfo();
             if (sectionId === 'adminUserManagement' && loggedInUser.role === 'admin') renderAdminUserManagement();
             if (sectionId === 'adminClassManagement' && loggedInUser.role === 'admin') renderAdminClassManagement();
@@ -643,603 +644,1553 @@
             if (sectionId === 'announcements') renderAnnouncements();
             if (sectionId === 'calendar') renderCalendarEvents();
             if (sectionId === 'adminTimetableManagement' && loggedInUser.role === 'admin') renderAdminTimetableManagement();
-            if (sectionId === 'settings') renderSettings(); // Dodano
+            if (sectionId === 'settings') renderSettings(); 
+            if (sectionId === 'polls') renderPollsList();
+            if (sectionId === 'adminPollManagement' && (loggedInUser.role === 'admin' || loggedInUser.role === 'teacher')) renderAdminPollManagement();
+            if (sectionId === 'books') renderBooksList();
+            if (sectionId === 'adminBookManagement' && (loggedInUser.role === 'admin' || loggedInUser.role === 'teacher')) renderAdminBookManagement();
 
             const menuItem = document.querySelector(`.sidebar-menu li[onclick="showSection('${sectionId}')"]`);
             setActiveMenuItem(menuItem);
         } else {
             console.error("Section not found: " + sectionId + "Section");
-            showMainView(); 
+            showMainView();
         }
-    }
-    function hideAllSections() { /* ... bez zmian ... */ 
-        document.querySelectorAll('.main-content .panel').forEach(panel => { panel.style.display = 'none'; });
-        if(document.getElementById('messageViewContainer')) document.getElementById('messageViewContainer').style.display = 'none';
-    }
-    function setActiveMenuItem(activeItem) { /* ... bez zmian ... */ 
-        document.querySelectorAll('.sidebar-menu li').forEach(item => { item.classList.remove('active'); });
-        if (activeItem) { activeItem.classList.add('active'); }
     }
     
-    function renderStudentGrades() { /* ... bez zmian ... */ 
-        const gradesDetailsContainer = document.getElementById('studentGradesDetails');
-        if (!loggedInUser || loggedInUser.role !== 'student') { gradesDetailsContainer.innerHTML = "<p>Brak dostępu do ocen.</p>"; return; }
-        const studentGrades = grades.filter(g => g.studentId === loggedInUser.id);
-        if (studentGrades.length === 0) { gradesDetailsContainer.innerHTML = "<p>Nie masz jeszcze żadnych ocen.</p>"; return; }
-        let html = ''; const subjects = [...new Set(studentGrades.map(g => g.subject))];
-        subjects.forEach(subject => {
-            const gradesForSubject = studentGrades.filter(g => g.subject === subject);
-            const teacher = users.find(u => u.id === gradesForSubject[0]?.teacherId);
-            html += `<div class="panel"><h3>${subject}</h3>`;
-            if (teacher) html += `<p>Nauczyciel: ${teacher.name}</p>`;
-            html += `<p>Oceny: `;
-            gradesForSubject.forEach(grade => {
-                let gradeClassVal = grade.value.replace(/[+-]/g, ''); let gradeClass = `grade-${gradeClassVal}`;
-                if (!/^[1-6]$/.test(gradeClassVal)) gradeClass = `grade-${grade.value.toUpperCase()}`;
-                html += `<span class="grade ${gradeClass}" title="${grade.description || 'Ocena'} (${grade.date})">${grade.value}</span>`;
-            }); html += `</p>`;
-            const numericGrades = gradesForSubject.map(g => parseFloat(g.value)).filter(v => !isNaN(v));
-            if (numericGrades.length > 0) { const average = numericGrades.reduce((sum, val) => sum + val, 0) / numericGrades.length; html += `<p>Średnia z przedmiotu: ${average.toFixed(2)}</p>`; }
-            html += `</div>`;
+    function hideAllSections() {
+        document.querySelectorAll('.main-content .panel').forEach(panel => {
+            panel.style.display = 'none';
         });
-        const allNumericGrades = studentGrades.map(g => parseFloat(g.value)).filter(v => !isNaN(v));
-        if(allNumericGrades.length > 0) { const overallAverage = allNumericGrades.reduce((sum, val) => sum + val, 0) / allNumericGrades.length; html += `<div class="panel"><h3>Podsumowanie</h3><p>Średnia ogólna (uproszczona): ${overallAverage.toFixed(2)}</p><p>Liczba wszystkich ocen: ${studentGrades.length}</p></div>`;}
-        gradesDetailsContainer.innerHTML = html;
+        if(document.getElementById('messageViewContainer')) document.getElementById('messageViewContainer').style.display = 'none';
+        if(document.getElementById('pollViewContainer')) document.getElementById('pollViewContainer').style.display = 'none';
     }
-    function renderStudentInfo() { /* ... bez zmian ... */  
-        const container = document.getElementById('studentDetailsContent');
-         if (!loggedInUser || loggedInUser.role !== 'student') { container.innerHTML = "<p>Brak dostępu.</p>"; return; }
-        const studentClass = classes.find(c => c.id === loggedInUser.classId);
-        let html = `<h3>${loggedInUser.name}</h3><p><strong>Login:</strong> ${loggedInUser.login}</p><p><strong>Rola:</strong> Uczeń</p><p><strong>Klasa:</strong> ${studentClass ? studentClass.name : 'Nieprzypisany'}</p><p><strong>Szczęśliwy numerek:</strong> ${loggedInUser.specialNumber || 'Brak'}</p>`;
-        container.innerHTML = html;
-    }
-    function toggleAdminUserFields() { /* ... bez zmian ... */ 
-        const role = document.getElementById('adminAddUserRole').value;
-        document.getElementById('adminStudentFields').style.display = role === 'student' ? 'block' : 'none';
-        document.getElementById('adminTeacherFields').style.display = role === 'teacher' ? 'block' : 'none';
-    }
-    function renderAdminUserManagement() { /* ... bez zmian ... */  
-        const classSelect = document.getElementById('adminAddUserClass');
-        classSelect.innerHTML = classes.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
-        if (classes.length === 0) classSelect.innerHTML = `<option value="">Brak klas do wyboru</option>`;
-        toggleAdminUserFields(); 
-        const userListContainer = document.getElementById('adminUserListContainer');
-        let tableHtml = `<table><thead><tr><th>ID</th><th>Login</th><th>Nazwa</th><th>Rola</th><th>Klasa/Przedmioty</th><th>Akcje</th></tr></thead><tbody>`;
-        users.forEach(user => {
-            let roleSpecificInfo = '';
-            if (user.role === 'student') { const studentClass = classes.find(c => c.id === user.classId); roleSpecificInfo = studentClass ? studentClass.name : 'Brak klasy'; } 
-            else if (user.role === 'teacher') { roleSpecificInfo = user.subjects ? user.subjects.join(', ') : 'Brak przedmiotów';}
-            tableHtml += `<tr><td>${user.id}</td><td>${user.login}</td><td>${user.name}</td><td>${user.role}</td><td>${roleSpecificInfo}</td><td><button class="action-btn btn-delete" onclick="deleteUserByAdmin(${user.id})">Usuń</button></td></tr>`;
-        }); tableHtml += `</tbody></table>`; userListContainer.innerHTML = tableHtml;
-    }
-    function addUserByAdmin() { /* ... bez zmian ... */  
-        const login = document.getElementById('adminAddUserLogin').value.trim(); const password = document.getElementById('adminAddUserPassword').value;  const name = document.getElementById('adminAddUserName').value.trim(); const role = document.getElementById('adminAddUserRole').value;
-        if (!login || !password || !name) { alert("Login, hasło i nazwa są wymagane!"); return; }
-        if (users.find(u => u.login === login)) { alert("Użytkownik o takim loginie już istnieje!"); return; }
-        const newUser = { id: getNextId(users), login, password, name, role };
-        if (role === 'student') { const classId = document.getElementById('adminAddUserClass').value; const specialNumber = document.getElementById('adminAddUserSpecialNumber').value.trim(); if (classId) newUser.classId = parseInt(classId); if (specialNumber) newUser.specialNumber = specialNumber; } 
-        else if (role === 'teacher') { const subjectsStr = document.getElementById('adminAddUserSubjects').value.trim(); const classIdsStr = document.getElementById('adminAddUserTeacherClasses').value.trim(); if (subjectsStr) newUser.subjects = subjectsStr.split(',').map(s => s.trim()).filter(s => s); if (classIdsStr) newUser.classIds = classIdsStr.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id));}
-        users.push(newUser); saveData(); renderAdminUserManagement(); alert("Użytkownik dodany!");
-        document.getElementById('adminAddUserLogin').value = ''; document.getElementById('adminAddUserPassword').value = ''; document.getElementById('adminAddUserName').value = ''; document.getElementById('adminAddUserSpecialNumber').value = ''; document.getElementById('adminAddUserSubjects').value = ''; document.getElementById('adminAddUserTeacherClasses').value = '';
-    }
-    function deleteUserByAdmin(userId) { /* ... bez zmian, ale dodano czyszczenie frekwencji ... */  
-        if (confirm(`Czy na pewno chcesz usunąć użytkownika o ID: ${userId}? Tej operacji nie można cofnąć.`)) {
-            if (loggedInUser && loggedInUser.id === userId) { alert("Nie możesz usunąć samego siebie!"); return; }
-            users = users.filter(user => user.id !== userId);
-            grades = grades.filter(grade => grade.studentId !== userId && grade.teacherId !== userId);
-            messages = messages.filter(msg => msg.senderId !== userId && msg.recipientId !== userId);
-            calendarEvents = calendarEvents.filter(event => event.createdByUserId !== userId);
-            attendance = attendance.filter(att => att.studentId !== userId && att.teacherId !== userId); // Dodano
-            timetables.forEach(entry => { if(entry.teacherId === userId) entry.teacherId = null; });
-            saveData(); renderAdminUserManagement(); alert("Użytkownik usunięty.");
+    
+    function setActiveMenuItem(activeItem) {
+        document.querySelectorAll('.sidebar-menu li').forEach(item => {
+            item.classList.remove('active');
+        });
+        if (activeItem) {
+            activeItem.classList.add('active');
         }
     }
-    function renderAdminClassManagement() { /* ... bez zmian ... */  
-        const teacherSelect = document.getElementById('adminAddClassTeacher');
-        teacherSelect.innerHTML = '<option value="">Brak (bez wychowawcy)</option>' +  users.filter(u => u.role === 'teacher').map(t => `<option value="${t.id}">${t.name}</option>`).join('');
-        const classListContainer = document.getElementById('adminClassListContainer');
-        let tableHtml = `<table><thead><tr><th>ID</th><th>Nazwa Klasy</th><th>Wychowawca</th><th>Akcje</th></tr></thead><tbody>`;
-        classes.forEach(cls => { const teacher = users.find(u => u.id === cls.teacherId && u.role === 'teacher'); tableHtml += `<tr><td>${cls.id}</td><td>${cls.name}</td><td>${teacher ? teacher.name : 'Brak'}</td><td><button class="action-btn btn-delete" onclick="deleteClassByAdmin(${cls.id})">Usuń</button></td></tr>`; });
-        tableHtml += `</tbody></table>`; classListContainer.innerHTML = tableHtml;
+    
+    function renderStudentGrades() {
+        const gdc = document.getElementById('studentGradesDetails');
+        if(!loggedInUser || loggedInUser.role !== 'student') {
+            gdc.innerHTML = "<p>Brak dostępu.</p>";
+            return;
+        }
+        
+        const sg = grades.filter(g => g.studentId === loggedInUser.id);
+        if(sg.length === 0) {
+            gdc.innerHTML = "<p>Brak ocen.</p>";
+            return;
+        }
+        
+        let h = '';
+        const subj = [...new Set(sg.map(g => g.subject))];
+        
+        subj.forEach(s => {
+            const gfs = sg.filter(g => g.subject === s);
+            const t = users.find(u => u.id === gfs[0]?.teacherId);
+            
+            h += `<div class="panel"><h3>${s}</h3>`;
+            if(t) h += `<p>Nauczyciel: ${t.name}</p>`;
+            
+            h += `<p>Oceny: `;
+            gfs.forEach(gr => {
+                let gv = gr.value.replace(/[+-]/g, '');
+                let gc = `grade-${gv}`;
+                if(!/^[1-6]$/.test(gv)) gc = `grade-${gr.value.toUpperCase()}`;
+                h += `<span class="grade ${gc}" title="${gr.description||'Ocena'} (${gr.date})">${gr.value}</span>`;
+            });
+            h += `</p>`;
+            
+            const ng = gfs.map(g => parseFloat(g.value)).filter(v => !isNaN(v));
+            if(ng.length > 0) {
+                const avg = ng.reduce((sum, val) => sum + val, 0) / ng.length;
+                h += `<p>Średnia: ${avg.toFixed(2)}</p>`;
+            }
+            
+            h += `</div>`;
+        });
+        
+        const ang = sg.map(g => parseFloat(g.value)).filter(v => !isNaN(v));
+        if(ang.length > 0) {
+            const oa = ang.reduce((sum, val) => sum + val, 0) / ang.length;
+            h += `<div class="panel"><h3>Podsumowanie</h3><p>Średnia ogólna: ${oa.toFixed(2)}</p><p>Liczba ocen: ${sg.length}</p></div>`;
+        }
+        
+        gdc.innerHTML = h;
     }
-    function addClassByAdmin() { /* ... bez zmian ... */  
-        const name = document.getElementById('adminAddClassName').value.trim(); const teacherId = document.getElementById('adminAddClassTeacher').value;
-        if (!name) { alert("Nazwa klasy jest wymagana!"); return; }
-        if (classes.find(c => c.name.toLowerCase() === name.toLowerCase())) { alert("Klasa o takiej nazwie już istnieje!"); return; }
-        const newClass = { id: getNextId(classes), name: name, teacherId: teacherId ? parseInt(teacherId) : null };
-        classes.push(newClass); saveData(); renderAdminClassManagement(); renderAdminUserManagement(); alert("Klasa dodana!");
+    
+    function renderStudentInfo() {
+        const c = document.getElementById('studentDetailsContent');
+        if(!loggedInUser || loggedInUser.role !== 'student') {
+            c.innerHTML = "<p>Brak dostępu.</p>";
+            return;
+        }
+        
+        const sc = classes.find(cl => cl.id === loggedInUser.classId);
+        c.innerHTML = `
+            <h3>${loggedInUser.name}</h3>
+            <p><strong>Login:</strong> ${loggedInUser.login}</p>
+            <p><strong>Rola:</strong> Uczeń</p>
+            <p><strong>Klasa:</strong> ${sc ? sc.name : 'Nieprzypisany'}</p>
+            <p><strong>Szczęśliwy numerek:</strong> ${loggedInUser.specialNumber || 'Brak'}</p>
+        `;
+    }
+    
+    function toggleAdminUserFields() {
+        const r = document.getElementById('adminAddUserRole').value;
+        document.getElementById('adminStudentFields').style.display = r === 'student' ? 'block' : 'none';
+        document.getElementById('adminTeacherFields').style.display = r === 'teacher' ? 'block' : 'none';
+    }
+    
+    function renderAdminUserManagement() {
+        const cs = document.getElementById('adminAddUserClass');
+        cs.innerHTML = classes.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+        if(classes.length === 0) cs.innerHTML = `<option value="">Brak klas</option>`;
+        
+        toggleAdminUserFields();
+        
+        const ulc = document.getElementById('adminUserListContainer');
+        let th = `<table><thead><tr><th>ID</th><th>Login</th><th>Nazwa</th><th>Rola</th><th>Hasło</th><th>Klasa/Przedmioty</th><th>Akcje</th></tr></thead><tbody>`;
+        
+        users.forEach(u => {
+            let rsi = '';
+            if(u.role === 'student') {
+                const sc = classes.find(c => c.id === u.classId);
+                rsi = sc ? sc.name : 'Brak klasy';
+            } else if(u.role === 'teacher') {
+                rsi = u.subjects ? u.subjects.join(', ') : 'Brak przedmiotów';
+            }
+            
+            th += `<tr>
+                <td>${u.id}</td>
+                <td>${u.login}</td>
+                <td>${u.name}</td>
+                <td>${u.role}</td>
+                <td>${u.password}</td>
+                <td>${rsi}</td>
+                <td><button class="action-btn btn-delete" onclick="deleteUserByAdmin(${u.id})">Usuń</button></td>
+            </tr>`;
+        });
+        
+        th += `</tbody></table>`;
+        ulc.innerHTML = th;
+    }
+    
+    function addUserByAdmin() {
+        const l = document.getElementById('adminAddUserLogin').value.trim();
+        const p = document.getElementById('adminAddUserPassword').value;
+        const n = document.getElementById('adminAddUserName').value.trim();
+        const r = document.getElementById('adminAddUserRole').value;
+        
+        if(!l || !p || !n) {
+            alert("Login, hasło i nazwa są wymagane!");
+            return;
+        }
+        
+        if(users.find(u => u.login === l)) {
+            alert("Login zajęty!");
+            return;
+        }
+        
+        const nu = { id: getNextId(users), login: l, password: p, name: n, role: r };
+        
+        if(r === 'student') {
+            const cid = document.getElementById('adminAddUserClass').value;
+            const sn = document.getElementById('adminAddUserSpecialNumber').value.trim();
+            if(cid) nu.classId = parseInt(cid);
+            if(sn) nu.specialNumber = sn;
+        } else if(r === 'teacher') {
+            const sstr = document.getElementById('adminAddUserSubjects').value.trim();
+            const cistr = document.getElementById('adminAddUserTeacherClasses').value.trim();
+            if(sstr) nu.subjects = sstr.split(',').map(s => s.trim()).filter(s => s);
+            if(cistr) nu.classIds = cistr.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id));
+        }
+        
+        users.push(nu);
+        saveData();
+        renderAdminUserManagement();
+        alert("Użytkownik dodany!");
+        
+        ['adminAddUserLogin','adminAddUserPassword','adminAddUserName','adminAddUserSpecialNumber','adminAddUserSubjects','adminAddUserTeacherClasses'].forEach(id => {
+            document.getElementById(id).value = '';
+        });
+    }
+    
+    function deleteUserByAdmin(uid) {
+        if(confirm(`Na pewno usunąć użytkownika ID: ${uid}?`)) {
+            if(loggedInUser && loggedInUser.id === uid) {
+                alert("Nie można usunąć siebie!");
+                return;
+            }
+            
+            users = users.filter(u => u.id !== uid);
+            grades = grades.filter(g => g.studentId !== uid && g.teacherId !== uid);
+            messages = messages.filter(m => m.senderId !== uid && m.recipientId !== uid);
+            calendarEvents = calendarEvents.filter(e => e.createdByUserId !== uid);
+            attendance = attendance.filter(a => a.studentId !== uid && a.teacherId !== uid);
+            polls = polls.filter(p => p.createdByUserId !== uid);
+            books = books.filter(b => b.addedByUserId !== uid);
+            
+            timetables.forEach(e => {
+                if(e.teacherId === uid) e.teacherId = null;
+            });
+            
+            saveData();
+            renderAdminUserManagement();
+            alert("Użytkownik usunięty.");
+        }
+    }
+    
+    function renderAdminClassManagement() {
+        const ts = document.getElementById('adminAddClassTeacher');
+        ts.innerHTML = '<option value="">(Brak wychowawcy)</option>' + 
+            users.filter(u => u.role === 'teacher').map(t => `<option value="${t.id}">${t.name}</option>`).join('');
+            
+        const clc = document.getElementById('adminClassListContainer');
+        let th = `<table><thead><tr><th>ID</th><th>Nazwa Klasy</th><th>Wychowawca</th><th>Akcje</th></tr></thead><tbody>`;
+        
+        classes.forEach(cl => {
+            const t = users.find(u => u.id === cl.teacherId && u.role === 'teacher');
+            th += `<tr>
+                <td>${cl.id}</td>
+                <td>${cl.name}</td>
+                <td>${t ? t.name : 'Brak'}</td>
+                <td><button class="action-btn btn-delete" onclick="deleteClassByAdmin(${cl.id})">Usuń</button></td>
+            </tr>`;
+        });
+        
+        th += `</tbody></table>`;
+        clc.innerHTML = th;
+    }
+    
+    function addClassByAdmin() {
+        const n = document.getElementById('adminAddClassName').value.trim();
+        const tid = document.getElementById('adminAddClassTeacher').value;
+        
+        if(!n) {
+            alert("Nazwa klasy wymagana!");
+            return;
+        }
+        
+        if(classes.find(c => c.name.toLowerCase() === n.toLowerCase())) {
+            alert("Klasa o tej nazwie istnieje!");
+            return;
+        }
+        
+        const nc = {
+            id: getNextId(classes),
+            name: n,
+            teacherId: tid ? parseInt(tid) : null
+        };
+        
+        classes.push(nc);
+        saveData();
+        renderAdminClassManagement();
+        renderAdminUserManagement();
+        alert("Klasa dodana!");
         document.getElementById('adminAddClassName').value = '';
     }
-    function deleteClassByAdmin(classId) { /* ... bez zmian ... */  
-         if (confirm(`Czy na pewno chcesz usunąć klasę o ID: ${classId}? Spowoduje to również odpięcie uczniów od tej klasy.`)) {
-            classes = classes.filter(cls => cls.id !== classId);
-            users.forEach(user => { if (user.role === 'student' && user.classId === classId) user.classId = null; });
-            timetables = timetables.filter(entry => entry.classId !== classId);
-            saveData(); renderAdminClassManagement(); renderAdminUserManagement(); alert("Klasa usunięta.");
+    
+    function deleteClassByAdmin(cid) {
+        if(confirm(`Na pewno usunąć klasę ID: ${cid}? Odłączy to uczniów.`)) {
+            classes = classes.filter(cl => cl.id !== cid);
+            users.forEach(u => {
+                if(u.role === 'student' && u.classId === cid) u.classId = null;
+            });
+            timetables = timetables.filter(e => e.classId !== cid);
+            saveData();
+            renderAdminClassManagement();
+            alert("Klasa usunięta.");
         }
     }
-    function renderTeacherGradeManagement() { /* ... bez zmian ... */  
-        if (!loggedInUser || loggedInUser.role !== 'teacher' || !loggedInUser.subjects) { document.getElementById('teacherGradeManagementSection').innerHTML = "<p>Brak dostępu lub nie przypisano przedmiotów.</p>"; return; }
-        const subjectSelect = document.getElementById('teacherSubjectSelectGrade'); subjectSelect.innerHTML = loggedInUser.subjects.map(s => `<option value="${s}">${s}</option>`).join('');
-        const studentSelect = document.getElementById('teacherStudentSelectGrade'); let studentsInTeacherClasses = [];
-        if (loggedInUser.classIds && loggedInUser.classIds.length > 0) { loggedInUser.classIds.forEach(classId => { const studentsInClass = users.filter(u => u.role === 'student' && u.classId === classId); studentsInTeacherClasses.push(...studentsInClass); });}
-        studentSelect.innerHTML = studentsInTeacherClasses.map(s => `<option value="${s.id}">${s.name} (Klasa: ${classes.find(c=>c.id === s.classId)?.name || 'N/A'})</option>`).join('');
-        if (studentsInTeacherClasses.length === 0) studentSelect.innerHTML = `<option value="">Brak uczniów w przypisanych klasach</option>`;
-        renderTeacherGradeManagementTable();
-    }
-    function renderTeacherGradeManagementTable() { /* ... bez zmian ... */  
-        const selectedSubject = document.getElementById('teacherSubjectSelectGrade').value; document.getElementById('currentTeacherSubjectDisplay').textContent = selectedSubject || "Wszystkie";
-        const gradesTableContainer = document.getElementById('teacherGradesTableContainer'); const teacherGrades = grades.filter(g => g.teacherId === loggedInUser.id && g.subject === selectedSubject);
-        let tableHtml = `<table><thead><tr><th>ID Oceny</th><th>Uczeń</th><th>Ocena</th><th>Opis</th><th>Data</th><th>Akcje</th></tr></thead><tbody>`;
-        teacherGrades.forEach(grade => { const student = users.find(u => u.id === grade.studentId); tableHtml += `<tr><td>${grade.id}</td><td>${student ? student.name : 'Nieznany'}</td><td>${grade.value}</td><td>${grade.description || '-'}</td><td>${grade.date}</td><td><button class="action-btn btn-delete" onclick="deleteGradeByTeacher(${grade.id})">Usuń</button></td></tr>`; });
-        tableHtml += `</tbody></table>`; if (teacherGrades.length === 0) tableHtml = "<p>Brak ocen dla wybranego przedmiotu.</p>";
-        gradesTableContainer.innerHTML = tableHtml;
-    }
-    function addGradeByTeacher() { /* ... bez zmian ... */  
-        const studentId = parseInt(document.getElementById('teacherStudentSelectGrade').value); const subject = document.getElementById('teacherSubjectSelectGrade').value; const value = document.getElementById('teacherGradeValueInput').value.trim(); const description = document.getElementById('teacherGradeDescriptionInput').value.trim();
-        if (!studentId || !subject || !value) { alert("Wybierz ucznia, przedmiot i wprowadź ocenę!"); return; }
-        const validGradePattern = /^[1-6][+-]?$|^[PNMpnmp][+-]?$/i;  if (!validGradePattern.test(value) && value.length > 3) { alert("Nieprawidłowy format oceny."); return; }
-        const newGrade = { id: getNextId(grades), studentId, subject, value, description, date: new Date().toISOString().split('T')[0], teacherId: loggedInUser.id };
-        grades.push(newGrade); saveData(); renderTeacherGradeManagementTable(); alert("Ocena dodana!");
-        document.getElementById('teacherGradeValueInput').value = ''; document.getElementById('teacherGradeDescriptionInput').value = '';
-    }
-    function deleteGradeByTeacher(gradeId) { /* ... bez zmian ... */  
-        if (confirm(`Czy na pewno chcesz usunąć ocenę o ID: ${gradeId}?`)) { grades = grades.filter(grade => !(grade.id === gradeId && grade.teacherId === loggedInUser.id)); saveData(); renderTeacherGradeManagementTable(); alert("Ocena usunięta."); }
-    }
-    function renderTeacherStudentsView() { /* ... bez zmian ... */  
-        const container = document.getElementById('teacherStudentsListContainer'); if (!loggedInUser || loggedInUser.role !== 'teacher') { container.innerHTML = "<p>Brak dostępu.</p>"; return; }
-        let html = '<h3>Lista uczniów w Twoich klasach:</h3>'; let studentsFound = false;
-        if (loggedInUser.classIds && loggedInUser.classIds.length > 0) {
-            loggedInUser.classIds.forEach(classId => {
-                const currentClass = classes.find(c => c.id === classId); const studentsInClass = users.filter(u => u.role === 'student' && u.classId === classId);
-                if (currentClass && studentsInClass.length > 0) { studentsFound = true; html += `<h4>Klasa: ${currentClass.name}</h4><ul>`; studentsInClass.forEach(student => { html += `<li>${student.name} (ID: ${student.id}, Numerek: ${student.specialNumber || 'brak'})</li>`; }); html += '</ul>'; } 
-                else if (currentClass) { html += `<h4>Klasa: ${currentClass.name}</h4><p>Brak uczniów w tej klasie.</p>`;}
+    
+    function renderTeacherGradeManagement() {
+        if(!loggedInUser || loggedInUser.role !== 'teacher' || !loggedInUser.subjects) {
+            document.getElementById('teacherGradeManagementSection').innerHTML = "<p>Brak dostępu.</p>";
+            return;
+        }
+        
+        const ss = document.getElementById('teacherSubjectSelectGrade');
+        ss.innerHTML = loggedInUser.subjects.map(s => `<option value="${s}">${s}</option>`).join('');
+        
+        const sts = document.getElementById('teacherStudentSelectGrade');
+        let sits = [];
+        
+        if(loggedInUser.classIds && loggedInUser.classIds.length > 0) {
+            loggedInUser.classIds.forEach(cid => {
+                const sic = users.filter(u => u.role === 'student' && u.classId === cid);
+                sits.push(...sic);
             });
         }
-        if (!studentsFound) html += "<p>Nie jesteś przypisany do żadnych klas lub w Twoich klasach nie ma uczniów.</p>";
-        container.innerHTML = html;
+        
+        sts.innerHTML = sits.map(s => 
+            `<option value="${s.id}">${s.name} (Klasa: ${classes.find(c => c.id === s.classId)?.name || 'N/A'})</option>`
+        ).join('');
+        
+        if(sits.length === 0) sts.innerHTML = `<option value="">Brak uczniów</option>`;
+        
+        renderTeacherGradeManagementTable();
+    }
+    
+    function renderTeacherGradeManagementTable() {
+        const selSub = document.getElementById('teacherSubjectSelectGrade').value;
+        document.getElementById('currentTeacherSubjectDisplay').textContent = selSub || "Wszystkie";
+        
+        const gtc = document.getElementById('teacherGradesTableContainer');
+        const tg = grades.filter(g => g.teacherId === loggedInUser.id && g.subject === selSub);
+        
+        let th = `<table><thead><tr><th>ID</th><th>Uczeń</th><th>Ocena</th><th>Opis</th><th>Data</th><th>Akcje</th></tr></thead><tbody>`;
+        
+        tg.forEach(gr => {
+            const s = users.find(u => u.id === gr.studentId);
+            th += `<tr>
+                <td>${gr.id}</td>
+                <td>${s ? s.name : 'Nieznany'}</td>
+                <td>${gr.value}</td>
+                <td>${gr.description || '-'}</td>
+                <td>${gr.date}</td>
+                <td>
+                    <button class="action-btn btn-edit" onclick="editGradeByTeacher(${gr.id})">Edytuj</button>
+                    <button class="action-btn btn-delete" onclick="deleteGradeByTeacher(${gr.id})">Usuń</button>
+                </td>
+            </tr>`;
+        });
+        
+        th += `</tbody></table>`;
+        if(tg.length === 0) th = "<p>Brak ocen dla przedmiotu.</p>";
+        gtc.innerHTML = th;
+    }
+    
+    function addGradeByTeacher() {
+        const sid = parseInt(document.getElementById('teacherStudentSelectGrade').value);
+        const sub = document.getElementById('teacherSubjectSelectGrade').value;
+        const val = document.getElementById('teacherGradeValueInput').value.trim();
+        const desc = document.getElementById('teacherGradeDescriptionInput').value.trim();
+        
+        if(!sid || !sub || !val) {
+            alert("Wybierz ucznia, przedmiot i ocenę!");
+            return;
+        }
+        
+        const vp = /^[1-6][+-]?$|^[PNMpnmp][+-]?$/i;
+        if(!vp.test(val) && val.length > 3) {
+            alert("Nieprawidłowy format oceny.");
+            return;
+        }
+        
+        const ng = {
+            id: getNextId(grades),
+            studentId: sid,
+            subject: sub,
+            value: val,
+            description: desc,
+            date: new Date().toISOString().split('T')[0],
+            teacherId: loggedInUser.id
+        };
+        
+        grades.push(ng);
+        saveData();
+        renderTeacherGradeManagementTable();
+        alert("Ocena dodana!");
+        
+        document.getElementById('teacherGradeValueInput').value = '';
+        document.getElementById('teacherGradeDescriptionInput').value = '';
+    }
+    
+    function editGradeByTeacher(gid) {
+        const grade = grades.find(g => g.id === gid);
+        if (!grade) return;
+        
+        const newValue = prompt("Wprowadź nową ocenę:", grade.value);
+        if (newValue === null) return;
+        
+        const newDesc = prompt("Wprowadź nowy opis:", grade.description || '');
+        
+        grade.value = newValue.trim();
+        if (newDesc !== null) {
+            grade.description = newDesc.trim();
+        }
+        
+        saveData();
+        renderTeacherGradeManagementTable();
+        alert("Ocena zaktualizowana!");
+    }
+    
+    function deleteGradeByTeacher(gid) {
+        if(confirm(`Na pewno usunąć ocenę ID: ${gid}?`)) {
+            grades = grades.filter(g => !(g.id === gid && g.teacherId === loggedInUser.id));
+            saveData();
+            renderTeacherGradeManagementTable();
+            alert("Ocena usunięta.");
+        }
+    }
+    
+    function renderTeacherStudentsView() {
+        const c = document.getElementById('teacherStudentsListContainer');
+        if(!loggedInUser || loggedInUser.role !== 'teacher') {
+            c.innerHTML = "<p>Brak dostępu.</p>";
+            return;
+        }
+        
+        let h = '<h3>Lista uczniów:</h3>';
+        let sf = false;
+        
+        if(loggedInUser.classIds && loggedInUser.classIds.length > 0) {
+            loggedInUser.classIds.forEach(cid => {
+                const cc = classes.find(cl => cl.id === cid);
+                const sic = users.filter(u => u.role === 'student' && u.classId === cid);
+                
+                if(cc && sic.length > 0) {
+                    sf = true;
+                    h += `<h4>Klasa: ${cc.name}</h4><ul>`;
+                    sic.forEach(s => {
+                        h += `<li>${s.name} (ID: ${s.id}, Numerek: ${s.specialNumber || 'brak'})</li>`;
+                    });
+                    h += '</ul>';
+                } else if(cc) {
+                    h += `<h4>Klasa: ${cc.name}</h4><p>Brak uczniów.</p>`;
+                }
+            });
+        }
+        
+        if(!sf) h += "<p>Brak przypisanych klas/uczniów.</p>";
+        c.innerHTML = h;
     }
 
-    const daysMap = { 1: "Poniedziałek", 2: "Wtorek", 3: "Środa", 4: "Czwartek", 5: "Piątek" };
+    const daysMap = { 1: "Pon", 2: "Wt", 3: "Śr", 4: "Czw", 5: "Pt" };
     const periodsOrder = ["1 (8:00-8:45)", "2 (8:55-9:40)", "3 (9:50-10:35)", "4 (10:55-11:40)", "5 (11:50-12:35)", "6 (12:45-13:30)", "7 (13:40-14:25)", "8 (14:35-15:20)"];
-    function renderTimetable() { /* ... bez zmian ... */ 
-        const container = document.getElementById('timetableContainer'); const displayOptions = document.getElementById('timetableDisplayOptions'); const classSelect = document.getElementById('timetableClassSelect'); let classIdToDisplay;
-        if (loggedInUser.role === 'student') { classIdToDisplay = loggedInUser.classId; displayOptions.style.display = 'none'; } 
-        else if (loggedInUser.role === 'teacher' || loggedInUser.role === 'admin') {
-            displayOptions.style.display = 'block'; classSelect.innerHTML = classes.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
-            if (classes.length > 0 && !classSelect.value) { classSelect.value = loggedInUser.classIds ? loggedInUser.classIds[0] : classes[0].id; }
-            classIdToDisplay = parseInt(classSelect.value);
+    
+    function renderTimetable() {
+        const c = document.getElementById('timetableContainer');
+        const dOpt = document.getElementById('timetableDisplayOptions');
+        const cs = document.getElementById('timetableClassSelect');
+        let ctd;
+        
+        if(loggedInUser.role === 'student') {
+            ctd = loggedInUser.classId;
+            dOpt.style.display = 'none';
+        } else if(loggedInUser.role === 'teacher' || loggedInUser.role === 'admin') {
+            dOpt.style.display = 'block';
+            cs.innerHTML = classes.map(cl => `<option value="${cl.id}">${cl.name}</option>`).join('');
+            if(classes.length > 0 && !cs.value) {
+                cs.value = loggedInUser.classIds ? loggedInUser.classIds[0] : classes[0].id;
+            }
+            ctd = parseInt(cs.value);
         }
-        if (!classIdToDisplay) { container.innerHTML = "<p>Nie przypisano klasy lub wybierz klasę.</p>"; return; }
-        const classTimetable = timetables.filter(t => t.classId === classIdToDisplay);
-        if (classTimetable.length === 0) { container.innerHTML = "<p>Brak planu lekcji dla tej klasy.</p>"; return; }
-        const uniquePeriods = [...new Set(classTimetable.map(item => item.period))];
-        uniquePeriods.sort((a, b) => { const numA = parseInt(a.split(' ')[0]); const numB = parseInt(b.split(' ')[0]); if (!isNaN(numA) && !isNaN(numB)) return numA - numB; return a.localeCompare(b); });
-        let html = '<table><thead><tr><th>Okres</th>'; for (let day = 1; day <= 5; day++) { html += `<th>${daysMap[day]}</th>`; } html += '</tr></thead><tbody>';
-        uniquePeriods.forEach(period => {
-            html += `<tr><td>${period}</td>`;
-            for (let day = 1; day <= 5; day++) {
-                const entry = classTimetable.find(e => e.dayOfWeek === day && e.period === period);
-                if (entry) { const teacher = users.find(u => u.id === entry.teacherId); html += `<td><strong>${entry.subject}</strong><br><small>${teacher ? teacher.name : 'Brak naucz.'}</small><br><small>Sala: ${entry.room || '-'}</small></td>`; } 
-                else { html += '<td>-</td>'; }
-            } html += '</tr>';
-        }); html += '</tbody></table>'; container.innerHTML = html;
+        
+        if(!ctd) {
+            c.innerHTML = "<p>Brak klasy.</p>";
+            return;
+        }
+        
+        const ct = timetables.filter(t => t.classId === ctd);
+        if(ct.length === 0) {
+            c.innerHTML = "<p>Brak planu.</p>";
+            return;
+        }
+        
+        const up = [...new Set(ct.map(i => i.period))];
+        up.sort((a,b) => {
+            const na = parseInt(a.split(' ')[0]);
+            const nb = parseInt(b.split(' ')[0]);
+            if(!isNaN(na) && !isNaN(nb)) return na - nb;
+            return a.localeCompare(b);
+        });
+        
+        let h = '<table><thead><tr><th>Okres</th>';
+        for(let d = 1; d <= 5; d++) {
+            h += `<th>${daysMap[d]}</th>`;
+        }
+        h += '</tr></thead><tbody>';
+        
+        up.forEach(p => {
+            h += `<tr><td>${p}</td>`;
+            for(let d = 1; d <= 5; d++) {
+                const e = ct.find(en => en.dayOfWeek === d && en.period === p);
+                if(e) {
+                    const t = users.find(u => u.id === e.teacherId);
+                    h += `<td><strong>${e.subject}</strong><br><small>${t ? t.name.split(' ')[0] : '-'}</small><br><small>S:${e.room || '-'}</small></td>`;
+                } else {
+                    h += '<td>-</td>';
+                }
+            }
+            h += '</tr>';
+        });
+        
+        h += '</tbody></table>';
+        c.innerHTML = h;
     }
 
     let currentMessageTab = 'inbox';
     let viewingMessageId = null;
-    function updateUnreadMessagesCount() { /* ... bez zmian ... */ 
+    
+    function updateUnreadMessagesCount() {
         const count = messages.filter(m => m.recipientId === loggedInUser.id && !m.read).length;
         document.getElementById('unreadMessagesCount').textContent = count;
     }
-    function renderMessages() { /* ... bez zmian ... */ 
-        showMessagesTab(currentMessageTab); updateUnreadMessagesCount();
+    
+    function renderMessages() {
+        showMessagesTab(currentMessageTab);
+        updateUnreadMessagesCount();
     }
-    function showMessagesTab(tabName) { // Poprawiono resetowanie formularza przy przejściu na "Napisz"
+    
+    function showMessagesTab(tabName) {
         currentMessageTab = tabName;
-        document.getElementById('messagesInboxContainer').style.display = 'none';
-        document.getElementById('messagesSentContainer').style.display = 'none';
-        document.getElementById('messagesComposeContainer').style.display = 'none';
-        document.getElementById('messageViewContainer').style.display = 'none'; 
-        document.getElementById('inboxTab').classList.remove('active');
-        document.getElementById('sentTab').classList.remove('active');
-        document.getElementById('composeTab').classList.remove('active');
-
-        if (tabName === 'inbox') { document.getElementById('messagesInboxContainer').style.display = 'block'; document.getElementById('inboxTab').classList.add('active'); renderInbox(); } 
-        else if (tabName === 'sent') { document.getElementById('messagesSentContainer').style.display = 'block'; document.getElementById('sentTab').classList.add('active'); renderSentMessages(); } 
-        else if (tabName === 'compose') { 
-            document.getElementById('messagesComposeContainer').style.display = 'block'; 
-            document.getElementById('composeTab').classList.add('active'); 
-            renderComposeMessageForm(); // Zawsze resetuj formularz, chyba że jest to odpowiedź
-        }
-    }
-    function renderInbox() { /* ... bez zmian ... */ 
-        const container = document.getElementById('messagesInboxContainer');
-        const inboxMessages = messages.filter(m => m.recipientId === loggedInUser.id).sort((a,b) => new Date(b.date) - new Date(a.date));
-        if (inboxMessages.length === 0) { container.innerHTML = "<p>Brak wiadomości w skrzynce odbiorczej.</p>"; return; }
-        let html = inboxMessages.map(msg => { const sender = users.find(u => u.id === msg.senderId); return `<div class="message-item ${msg.read ? '' : 'unread'}" onclick="viewMessage(${msg.id})"><p><strong>Od:</strong> ${sender ? sender.name : 'Nieznany'} | <strong>Tytuł:</strong> ${msg.title}</p><p><small>${new Date(msg.date).toLocaleString()}</small></p></div>`; }).join('');
-        container.innerHTML = html;
-    }
-    function renderSentMessages() { /* ... bez zmian ... */ 
-        const container = document.getElementById('messagesSentContainer');
-        const sentMessages = messages.filter(m => m.senderId === loggedInUser.id).sort((a,b) => new Date(b.date) - new Date(a.date));
-        if (sentMessages.length === 0) { container.innerHTML = "<p>Brak wysłanych wiadomości.</p>"; return; }
-        let html = sentMessages.map(msg => { const recipient = users.find(u => u.id === msg.recipientId); return `<div class="message-item" onclick="viewMessage(${msg.id})"><p><strong>Do:</strong> ${recipient ? recipient.name : 'Nieznany'} | <strong>Tytuł:</strong> ${msg.title}</p><p><small>${new Date(msg.date).toLocaleString()}</small></p></div>`; }).join('');
-        container.innerHTML = html;
-    }
-    function renderComposeMessageForm(replyToMsg = null) { // Poprawiono, aby recipientSelect był zawsze wypełniany
-        const recipientSelect = document.getElementById('messageRecipient');
-        const titleInput = document.getElementById('messageTitle');
-        const contentInput = document.getElementById('messageContent');
-
-        // Zawsze wypełniaj listę odbiorców
-        recipientSelect.innerHTML = users
-            .filter(u => u.id !== loggedInUser.id) 
-            .map(u => `<option value="${u.id}">${u.name} (${u.role === 'student' ? 'Uczeń' : u.role === 'teacher' ? 'Nauczyciel' : 'Admin'})</option>`)
-            .join('');
+        ['messagesInboxContainer','messagesSentContainer','messagesComposeContainer','messageViewContainer'].forEach(id => {
+            document.getElementById(id).style.display = 'none';
+        });
+        ['inboxTab','sentTab','composeTab'].forEach(id => {
+            document.getElementById(id).classList.remove('active');
+        });
         
-        if (replyToMsg) {
-            recipientSelect.value = replyToMsg.senderId; // Ustaw odbiorcę na nadawcę oryginalnej wiadomości
-            titleInput.value = `Re: ${replyToMsg.title}`;
-            contentInput.value = `\n\n----- Wiadomość oryginalna -----\nOd: ${users.find(u=>u.id === replyToMsg.senderId)?.name}\nData: ${new Date(replyToMsg.date).toLocaleString()}\nTreść:\n${replyToMsg.content}`;
-            contentInput.focus();
-        } else { // Nowa wiadomość lub przejście na zakładkę "Napisz"
-            titleInput.value = '';
-            contentInput.value = '';
-            if (users.filter(u => u.id !== loggedInUser.id).length > 0) { // Ustaw domyślnego odbiorcę, jeśli lista nie jest pusta
-                 recipientSelect.selectedIndex = 0; // Wybierz pierwszego użytkownika z listy jako domyślnego
-            }
+        if(tabName === 'inbox') {
+            document.getElementById('messagesInboxContainer').style.display = 'block';
+            document.getElementById('inboxTab').classList.add('active');
+            renderInbox();
+        } else if(tabName === 'sent') {
+            document.getElementById('messagesSentContainer').style.display = 'block';
+            document.getElementById('sentTab').classList.add('active');
+            renderSentMessages();
+        } else if(tabName === 'compose') {
+            document.getElementById('messagesComposeContainer').style.display = 'block';
+            document.getElementById('composeTab').classList.add('active');
+            renderComposeMessageForm();
         }
     }
-    function sendMessage() { // Poprawki w logice wysyłania
-        console.log("Attempting to send message...");
-        const recipientId = parseInt(document.getElementById('messageRecipient').value);
-        const title = document.getElementById('messageTitle').value.trim();
-        const content = document.getElementById('messageContent').value.trim();
-
-        console.log("Recipient ID:", recipientId, "Title:", title, "Content length:", content.length, "Sender ID:", loggedInUser.id);
-
-        if (!recipientId || isNaN(recipientId)) { alert("Wybierz prawidłowego odbiorcę!"); return; }
-        if (!title || !content) { alert("Tytuł i treść wiadomości są wymagane!"); return; }
-
-        const newMessage = {
+    
+    function renderInbox() {
+        const c = document.getElementById('messagesInboxContainer');
+        const im = messages.filter(m => m.recipientId === loggedInUser.id).sort((a,b) => new Date(b.date) - new Date(a.date));
+        
+        if(im.length === 0) {
+            c.innerHTML = "<p>Brak wiadomości.</p>";
+            return;
+        }
+        
+        c.innerHTML = im.map(m => {
+            const s = users.find(u => u.id === m.senderId);
+            return `<div class="message-item ${m.read ? '' : 'unread'}" onclick="viewMessage(${m.id})">
+                <p><strong>Od:</strong> ${s ? s.name : '?'} | <strong>Tytuł:</strong> ${m.title}</p>
+                <p><small>${new Date(m.date).toLocaleString()}</small></p>
+            </div>`;
+        }).join('');
+    }
+    
+    function renderSentMessages() {
+        const c = document.getElementById('messagesSentContainer');
+        const sm = messages.filter(m => m.senderId === loggedInUser.id).sort((a,b) => new Date(b.date) - new Date(a.date));
+        
+        if(sm.length === 0) {
+            c.innerHTML = "<p>Brak wysłanych.</p>";
+            return;
+        }
+        
+        c.innerHTML = sm.map(m => {
+            const r = users.find(u => u.id === m.recipientId);
+            return `<div class="message-item" onclick="viewMessage(${m.id})">
+                <p><strong>Do:</strong> ${r ? r.name : '?'} | <strong>Tytuł:</strong> ${m.title}</p>
+                <p><small>${new Date(m.date).toLocaleString()}</small></p>
+            </div>`;
+        }).join('');
+    }
+    
+    function renderComposeMessageForm(replyToMsg = null) {
+        const rs = document.getElementById('messageRecipient');
+        const ti = document.getElementById('messageTitle');
+        const ci = document.getElementById('messageContent');
+        
+        rs.innerHTML = users.filter(u => u.id !== loggedInUser.id).map(u => 
+            `<option value="${u.id}">${u.name} (${u.role === 'student' ? 'U' : u.role === 'teacher' ? 'N' : 'A'})</option>`
+        ).join('');
+        
+        if(replyToMsg) {
+            rs.value = replyToMsg.senderId;
+            ti.value = `Re: ${replyToMsg.title}`;
+            ci.value = `\n\n----- Oryginalna -----\n${replyToMsg.content}`;
+            ci.focus();
+        } else {
+            ti.value = '';
+            ci.value = '';
+            if(rs.options.length > 0) rs.selectedIndex = 0;
+        }
+    }
+    
+    function sendMessage() {
+        const rid = parseInt(document.getElementById('messageRecipient').value);
+        const t = document.getElementById('messageTitle').value.trim();
+        const c = document.getElementById('messageContent').value.trim();
+        
+        if(!rid || isNaN(rid)) {
+            alert("Wybierz odbiorcę!");
+            return;
+        }
+        
+        if(!t || !c) {
+            alert("Tytuł i treść wymagane!");
+            return;
+        }
+        
+        messages.push({
             id: getNextId(messages),
             senderId: loggedInUser.id,
-            recipientId: recipientId,
-            title: title,
-            content: content,
+            recipientId: rid,
+            title: t,
+            content: c,
             date: new Date().toISOString(),
             read: false
-        };
-        messages.push(newMessage);
-        console.log("New message added:", newMessage);
+        });
+        
         saveData();
         alert("Wiadomość wysłana!");
-        // Nie czyść formularza tutaj, renderComposeMessageForm zrobi to przy przejściu na zakładkę
-        showMessagesTab('sent'); // Przejdź do wysłanych
-        updateUnreadMessagesCount(); // Zaktualizuj licznik dla innych użytkowników (symulacja)
+        showMessagesTab('sent');
+        updateUnreadMessagesCount();
     }
-    function viewMessage(messageId) { /* ... bez zmian ... */ 
-        viewingMessageId = messageId; const msg = messages.find(m => m.id === messageId); if (!msg) return;
-        if (msg.recipientId === loggedInUser.id && !msg.read) { msg.read = true; saveData(); updateUnreadMessagesCount(); if (currentMessageTab === 'inbox') renderInbox(); }
-        document.getElementById('messagesInboxContainer').style.display = 'none'; document.getElementById('messagesSentContainer').style.display = 'none'; document.getElementById('messagesComposeContainer').style.display = 'none'; document.getElementById('messageViewContainer').style.display = 'block';
-        const sender = users.find(u => u.id === msg.senderId); const recipient = users.find(u => u.id === msg.recipientId);
-        document.getElementById('viewMessageTitle').textContent = msg.title; document.getElementById('viewMessageSender').textContent = sender ? sender.name : 'Nieznany'; document.getElementById('viewMessageRecipient').textContent = recipient ? recipient.name : 'Nieznany'; document.getElementById('viewMessageDate').textContent = new Date(msg.date).toLocaleString(); document.getElementById('viewMessageContent').innerHTML = msg.content.replace(/\n/g, '<br>');
-        document.getElementById('replyMessageBtn').style.display = (msg.recipientId === loggedInUser.id) ? 'inline-block' : 'none';
+    
+    function viewMessage(mid) {
+        viewingMessageId = mid;
+        const m = messages.find(msg => msg.id === mid);
+        if(!m) return;
+        
+        if(m.recipientId === loggedInUser.id && !m.read) {
+            m.read = true;
+            saveData();
+            updateUnreadMessagesCount();
+            if(currentMessageTab === 'inbox') renderInbox();
+        }
+        
+        ['messagesInboxContainer','messagesSentContainer','messagesComposeContainer'].forEach(id => {
+            document.getElementById(id).style.display = 'none';
+        });
+        
+        document.getElementById('messageViewContainer').style.display = 'block';
+        
+        const s = users.find(u => u.id === m.senderId);
+        const r = users.find(u => u.id === m.recipientId);
+        
+        document.getElementById('viewMessageTitle').textContent = m.title;
+        document.getElementById('viewMessageSender').textContent = s ? s.name : '?';
+        document.getElementById('viewMessageRecipient').textContent = r ? r.name : '?';
+        document.getElementById('viewMessageDate').textContent = new Date(m.date).toLocaleString();
+        document.getElementById('viewMessageContent').innerHTML = m.content.replace(/\n/g, '<br>');
+        document.getElementById('replyMessageBtn').style.display = (m.recipientId === loggedInUser.id) ? 'inline-block' : 'none';
     }
-    function hideMessageView() { /* ... bez zmian ... */ 
-        document.getElementById('messageViewContainer').style.display = 'none'; viewingMessageId = null; showMessagesTab(currentMessageTab); 
+    
+    function hideMessageView() {
+        document.getElementById('messageViewContainer').style.display = 'none';
+        viewingMessageId = null;
+        showMessagesTab(currentMessageTab);
     }
-    function replyToMessage() { /* ... bez zmian ... */ 
-        if (!viewingMessageId) return; const originalMessage = messages.find(m => m.id === viewingMessageId); if (!originalMessage) return;
-        showMessagesTab('compose'); renderComposeMessageForm(originalMessage); 
+    
+    function replyToMessage() {
+        if(!viewingMessageId) return;
+        const om = messages.find(m => m.id === viewingMessageId);
+        if(!om) return;
+        
+        showMessagesTab('compose');
+        renderComposeMessageForm(om);
     }
 
-    function toggleAddAnnouncementForm() { /* ... bez zmian ... */  
-        const form = document.getElementById('addAnnouncementFormContainer'); form.style.display = form.style.display === 'none' ? 'block' : 'none'; 
+    function toggleAddAnnouncementForm() {
+        const form = document.getElementById('addAnnouncementFormContainer');
+        if (form) {
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
     }
-    function renderAnnouncements() { /* ... bez zmian ... */  
-        const container = document.getElementById('announcementsListContainer'); const audienceSelect = document.getElementById('announcementAudience'); 
-        audienceSelect.innerHTML = `<option value="all">Wszyscy</option><option value="all_students">Wszyscy Uczniowie</option><option value="all_teachers">Wszyscy Nauczyciele</option>${classes.map(c => `<option value="class_${c.id}">Klasa ${c.name}</option>`).join('')}`;
+    
+    function renderAnnouncements() {
+        const listContainer = document.getElementById('announcementsListContainer');
+        const audienceSelectForm = document.getElementById('announcementAudience');
+        
+        if(audienceSelectForm) {
+            const currentValue = audienceSelectForm.value;
+            const staticOptionsValues = ["all","all_students","all_teachers"];
+            let newOptionsHTML = '';
+            
+            staticOptionsValues.forEach(val => {
+                let text = '';
+                if(val === 'all') text = 'Wszyscy';
+                else if(val === 'all_students') text = 'Wszyscy uczniowie';
+                else if(val === 'all_teachers') text = 'Wszyscy nauczyciele';
+                newOptionsHTML += `<option value="${val}">${text}</option>`;
+            });
+            
+            audienceSelectForm.innerHTML = newOptionsHTML;
+            classes.forEach(c => {
+                audienceSelectForm.innerHTML += `<option value="class_${c.id}">Klasa ${c.name}</option>`;
+            });
+            
+            if(currentValue && Array.from(audienceSelectForm.options).some(opt => opt.value === currentValue)) {
+                audienceSelectForm.value = currentValue;
+            } else if(audienceSelectForm.options.length > 0) {
+                audienceSelectForm.selectedIndex = 0;
+            }
+        }
+        
         const userAnnouncements = announcements.filter(ann => {
-            if (ann.audience === 'all') return true; if (loggedInUser.role === 'student' && ann.audience === 'all_students') return true; if (loggedInUser.role === 'teacher' && ann.audience === 'all_teachers') return true; if (loggedInUser.role === 'student' && ann.audience === `class_${loggedInUser.classId}`) return true;
-            if (loggedInUser.role === 'teacher' && loggedInUser.classIds && loggedInUser.classIds.some(clsId => ann.audience === `class_${clsId}`)) return true; if (loggedInUser.role === 'admin') return true; return false;
+            if(ann.audience === 'all') return true;
+            if(loggedInUser.role === 'student' && ann.audience === 'all_students') return true;
+            if(loggedInUser.role === 'teacher' && ann.audience === 'all_teachers') return true;
+            if(loggedInUser.role === 'student' && ann.audience === `class_${loggedInUser.classId}`) return true;
+            if(loggedInUser.role === 'teacher' && loggedInUser.classIds && loggedInUser.classIds.some(clsId => ann.audience === `class_${clsId}`)) return true;
+            if(loggedInUser.role === 'admin') return true;
+            return false;
         }).sort((a,b) => new Date(b.date) - new Date(a.date));
-        if (userAnnouncements.length === 0) { container.innerHTML = "<p>Brak aktualnych ogłoszeń.</p>"; return; }
-        let html = userAnnouncements.map(ann => {
-            const author = users.find(u => u.id === ann.authorId) || {name: ann.authorName || 'System'}; let audienceDisplay = ann.audience;
-            if(ann.audience.startsWith('class_')) { const classId = parseInt(ann.audience.split('_')[1]); const className = classes.find(c => c.id === classId)?.name; audienceDisplay = className ? `Klasa ${className}` : 'Wybrana klasa'; } 
-            else if (ann.audience === 'all_students') audienceDisplay = 'Wszyscy uczniowie'; else if (ann.audience === 'all_teachers') audienceDisplay = 'Wszyscy nauczyciele'; else if (ann.audience === 'all') audienceDisplay = 'Wszyscy';
-            return `<div class="panel"><h3>${ann.title}</h3><p><small>Autor: ${author.name} | Data: ${new Date(ann.date).toLocaleDateString()} | Dla: ${audienceDisplay}</small></p><p>${ann.content.replace(/\n/g, '<br>')}</p>${(loggedInUser.role === 'admin' || loggedInUser.id === ann.authorId) ? `<button class="action-btn btn-delete" onclick="deleteAnnouncement(${ann.id})">Usuń</button>` : ''}</div>`;
-        }).join(''); container.innerHTML = html;
-        document.getElementById('toggleAddAnnouncementBtn').style.display = (loggedInUser.role === 'admin' || loggedInUser.role === 'teacher') ? 'inline-block' : 'none';
-        document.getElementById('addAnnouncementFormContainer').style.display = 'none'; 
+        
+        if(userAnnouncements.length === 0) {
+            listContainer.innerHTML = "<p>Brak ogłoszeń.</p>";
+        } else {
+            listContainer.innerHTML = userAnnouncements.map(ann => {
+                const author = users.find(u => u.id === ann.authorId) || { name: ann.authorName || 'System' };
+                let audienceDisplay = ann.audience;
+                
+                if(ann.audience.startsWith('class_')) {
+                    const classId = parseInt(ann.audience.split('_')[1]);
+                    const className = classes.find(c => c.id === classId)?.name;
+                    audienceDisplay = className ? `Klasa ${className}` : 'Wybrana klasa';
+                } else if(ann.audience === 'all_students') audienceDisplay = 'Wszyscy uczniowie';
+                else if(ann.audience === 'all_teachers') audienceDisplay = 'Wszyscy nauczyciele';
+                else if(ann.audience === 'all') audienceDisplay = 'Wszyscy';
+                
+                return `<div class="panel">
+                    <h3>${ann.title}</h3>
+                    <p><small>Autor: ${author.name} | Data: ${new Date(ann.date).toLocaleDateString()} | Dla: ${audienceDisplay}</small></p>
+                    <p>${ann.content.replace(/\n/g, '<br>')}</p>
+                    ${(loggedInUser.role === 'admin' || loggedInUser.id === ann.authorId) ? 
+                        `<button class="action-btn btn-delete" onclick="deleteAnnouncement(${ann.id})">Usuń</button>` : ''}
+                </div>`;
+            }).join('');
+        }
+        
+        const toggleButton = document.getElementById('toggleAddAnnouncementBtn');
+        const formContainer = document.getElementById('addAnnouncementFormContainer');
+        const canAdd = loggedInUser && (loggedInUser.role === 'admin' || loggedInUser.role === 'teacher');
+        
+        if(toggleButton) {
+            toggleButton.style.display = canAdd ? 'inline-block' : 'none';
+        }
+        if(formContainer && !canAdd) {
+            formContainer.style.display = 'none';
+        }
     }
-    function addAnnouncement() { /* ... bez zmian ... */  
-        const title = document.getElementById('announcementTitle').value.trim(); const content = document.getElementById('announcementContent').value.trim(); const audience = document.getElementById('announcementAudience').value;
-        if (!title || !content) { alert("Tytuł i treść ogłoszenia są wymagane!"); return; }
-        const newAnnouncement = { id: getNextId(announcements), title, content, date: new Date().toISOString().split('T')[0], authorId: loggedInUser.id, authorName: loggedInUser.name, audience };
-        announcements.push(newAnnouncement); saveData(); renderAnnouncements(); 
-        document.getElementById('announcementTitle').value = ''; document.getElementById('announcementContent').value = ''; document.getElementById('addAnnouncementFormContainer').style.display = 'none'; 
+    
+    function addAnnouncement() {
+        const titleInput = document.getElementById('announcementTitle');
+        const contentInput = document.getElementById('announcementContent');
+        const audienceSelect = document.getElementById('announcementAudience');
+        
+        if(!titleInput || !contentInput || !audienceSelect) {
+            console.error("Brak elementów formularza ogłoszeń!");
+            alert("Błąd formularza.");
+            return;
+        }
+        
+        const title = titleInput.value.trim();
+        const content = contentInput.value.trim();
+        const audience = audienceSelect.value;
+        
+        if(!title || !content) {
+            alert("Tytuł i treść wymagane!");
+            return;
+        }
+        
+        if(!loggedInUser) {
+            alert("Błąd: Niezalogowany.");
+            return;
+        }
+        
+        const newAnnouncement = {
+            id: getNextId(announcements),
+            title,
+            content,
+            date: new Date().toISOString().split('T')[0],
+            authorId: loggedInUser.id,
+            authorName: loggedInUser.name,
+            audience
+        };
+        
+        announcements.push(newAnnouncement);
+        saveData();
+        renderAnnouncements();
+        
+        titleInput.value = '';
+        contentInput.value = '';
+        
+        const formContainer = document.getElementById('addAnnouncementFormContainer');
+        if(formContainer) {
+            formContainer.style.display = 'none';
+        }
+        
+        alert("Ogłoszenie dodane.");
     }
-    function deleteAnnouncement(announcementId) { /* ... bez zmian ... */  
-        const ann = announcements.find(a => a.id === announcementId); if (!ann) return;
-        if (loggedInUser.role === 'admin' || loggedInUser.id === ann.authorId) { if (confirm("Czy na pewno chcesz usunąć to ogłoszenie?")) { announcements = announcements.filter(a => a.id !== announcementId); saveData(); renderAnnouncements(); } } 
-        else { alert("Nie masz uprawnień do usunięcia tego ogłoszenia."); }
+    
+    function deleteAnnouncement(aid) {
+        const a = announcements.find(an => an.id === aid);
+        if(!a) return;
+        
+        if(loggedInUser.role === 'admin' || loggedInUser.id === a.authorId) {
+            if(confirm("Na pewno usunąć?")) {
+                announcements = announcements.filter(an => an.id !== aid);
+                saveData();
+                renderAnnouncements();
+            }
+        } else {
+            alert("Brak uprawnień.");
+        }
     }
 
-    function toggleAddCalendarEventForm() { /* ... bez zmian ... */ 
-         const form = document.getElementById('addCalendarEventFormContainer'); form.style.display = form.style.display === 'none' ? 'block' : 'none'; 
+    function toggleAddCalendarEventForm() {
+        const form = document.getElementById('addCalendarEventFormContainer');
+        if (form) {
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
     }
-    function renderCalendarEvents() { /* ... bez zmian ... */ 
-        const container = document.getElementById('calendarEventsListContainer'); const audienceSelect = document.getElementById('calendarEventAudience'); 
-        audienceSelect.innerHTML = `<option value="all">Wszyscy</option><option value="all_students">Wszyscy Uczniowie</option><option value="all_teachers">Wszyscy Nauczyciele</option>${classes.map(c => `<option value="class_${c.id}">Klasa ${c.name}</option>`).join('')}`;
-        const userEvents = calendarEvents.filter(event => {
-            if (event.audience === 'all') return true; if (loggedInUser.role === 'student' && event.audience === 'all_students') return true; if (loggedInUser.role === 'teacher' && event.audience === 'all_teachers') return true; if (loggedInUser.role === 'student' && event.audience === `class_${loggedInUser.classId}`) return true;
-            if (loggedInUser.role === 'teacher' && loggedInUser.classIds && loggedInUser.classIds.some(clsId => event.audience === `class_${clsId}`)) return true; if (loggedInUser.role === 'admin') return true; return false;
-        }).sort((a,b) => new Date(a.date) - new Date(b.date)); 
-        if (userEvents.length === 0) { container.innerHTML = "<p>Brak nadchodzących wydarzeń w terminarzu.</p>"; return; }
-        let html = userEvents.map(event => {
-            const creator = users.find(u => u.id === event.createdByUserId); let audienceDisplay = event.audience;
-            if(event.audience.startsWith('class_')) { const classId = parseInt(event.audience.split('_')[1]); const className = classes.find(c => c.id === classId)?.name; audienceDisplay = className ? `Klasa ${className}` : 'Wybrana klasa';} 
-            else if (event.audience === 'all_students') audienceDisplay = 'Wszyscy uczniowie'; else if (event.audience === 'all_teachers') audienceDisplay = 'Wszyscy nauczyciele'; else if (event.audience === 'all') audienceDisplay = 'Wszyscy';
-            return `<div class="panel"><h3>${event.title} (${new Date(event.date).toLocaleDateString()})</h3><p><small>Dodał: ${creator ? creator.name : 'System'} | Dla: ${audienceDisplay}</small></p><p>${event.description.replace(/\n/g, '<br>')}</p>${(loggedInUser.role === 'admin' || loggedInUser.id === event.createdByUserId) ? `<button class="action-btn btn-delete" onclick="deleteCalendarEvent(${event.id})">Usuń</button>` : ''}</div>`;
-        }).join(''); container.innerHTML = html;
-        document.getElementById('toggleAddCalendarEventBtn').style.display = (loggedInUser.role === 'admin' || loggedInUser.role === 'teacher') ? 'inline-block' : 'none';
-        document.getElementById('addCalendarEventFormContainer').style.display = 'none'; 
+    
+    function renderCalendarEvents() {
+        const lc = document.getElementById('calendarEventsListContainer');
+        const asf = document.getElementById('calendarEventAudience');
+        
+        if(asf) {
+            const cv = asf.value;
+            const sov = ["all","all_students","all_teachers"];
+            let noh = '';
+            
+            sov.forEach(v => {
+                let t = '';
+                if(v === 'all') t = 'Wszyscy';
+                else if(v === 'all_students') t = 'Wszyscy uczniowie';
+                else if(v === 'all_teachers') t = 'Wszyscy nauczyciele';
+                noh += `<option value="${v}">${t}</option>`;
+            });
+            
+            asf.innerHTML = noh;
+            classes.forEach(c => {
+                asf.innerHTML += `<option value="class_${c.id}">Klasa ${c.name}</option>`;
+            });
+            
+            if(cv && Array.from(asf.options).some(o => o.value === cv)) {
+                asf.value = cv;
+            } else if(asf.options.length > 0) {
+                asf.selectedIndex = 0;
+            }
+        }
+        
+        const ue = calendarEvents.filter(e => {
+            if(e.audience === 'all') return true;
+            if(loggedInUser.role === 'student' && e.audience === 'all_students') return true;
+            if(loggedInUser.role === 'teacher' && e.audience === 'all_teachers') return true;
+            if(loggedInUser.role === 'student' && e.audience === `class_${loggedInUser.classId}`) return true;
+            if(loggedInUser.role === 'teacher' && loggedInUser.classIds && loggedInUser.classIds.some(cid => e.audience === `class_${cid}`)) return true;
+            if(loggedInUser.role === 'admin') return true;
+            return false;
+        }).sort((a,b) => new Date(a.date) - new Date(b.date));
+        
+        if(ue.length === 0) {
+            lc.innerHTML = "<p>Brak wydarzeń.</p>";
+        } else {
+            lc.innerHTML = ue.map(e => {
+                const cr = users.find(u => u.id === e.createdByUserId);
+                let ad = e.audience;
+                
+                if(e.audience.startsWith('class_')) {
+                    const cid = parseInt(e.audience.split('_')[1]);
+                    const cn = classes.find(c => c.id === cid)?.name;
+                    ad = cn ? `Klasa ${cn}` : 'Wybrana klasa';
+                } else if(e.audience === 'all_students') ad = 'Wszyscy uczniowie';
+                else if(e.audience === 'all_teachers') ad = 'Wszyscy nauczyciele';
+                else if(e.audience === 'all') ad = 'Wszyscy';
+                
+                return `<div class="panel">
+                    <h3>${e.title} (${new Date(e.date).toLocaleDateString()})</h3>
+                    <p><small>Dodał: ${cr ? cr.name : 'System'} | Dla: ${ad}</small></p>
+                    <p>${e.description.replace(/\n/g, '<br>')}</p>
+                    ${(loggedInUser.role === 'admin' || loggedInUser.id === e.createdByUserId) ? 
+                        `<button class="action-btn btn-delete" onclick="deleteCalendarEvent(${e.id})">Usuń</button>` : ''}
+                </div>`;
+            }).join('');
+        }
+        
+        const tb = document.getElementById('toggleAddCalendarEventBtn');
+        const fc = document.getElementById('addCalendarEventFormContainer');
+        const ca = loggedInUser && (loggedInUser.role === 'admin' || loggedInUser.role === 'teacher');
+        
+        if(tb) {
+            tb.style.display = ca ? 'inline-block' : 'none';
+        }
+        if(fc && !ca) {
+            fc.style.display = 'none';
+        }
     }
-    function addCalendarEvent() { /* ... bez zmian ... */ 
-        const title = document.getElementById('calendarEventTitle').value.trim(); const date = document.getElementById('calendarEventDate').value; const description = document.getElementById('calendarEventDescription').value.trim(); const audience = document.getElementById('calendarEventAudience').value;
-        if (!title || !date || !description) { alert("Tytuł, data i opis wydarzenia są wymagane!"); return; }
-        const newEvent = { id: getNextId(calendarEvents), title, date, description, audience, createdByUserId: loggedInUser.id };
-        calendarEvents.push(newEvent); saveData(); renderCalendarEvents(); 
-        document.getElementById('calendarEventTitle').value = ''; document.getElementById('calendarEventDate').value = ''; document.getElementById('calendarEventDescription').value = ''; document.getElementById('addCalendarEventFormContainer').style.display = 'none';
+    
+    function addCalendarEvent() {
+        const t = document.getElementById('calendarEventTitle').value.trim();
+        const d = document.getElementById('calendarEventDate').value;
+        const de = document.getElementById('calendarEventDescription').value.trim();
+        const a = document.getElementById('calendarEventAudience').value;
+        
+        if(!t || !d || !de) {
+            alert("Tytuł, data i opis wymagane!");
+            return;
+        }
+        
+        const ne = {
+            id: getNextId(calendarEvents),
+            title: t,
+            date: d,
+            description: de,
+            audience: a,
+            createdByUserId: loggedInUser.id
+        };
+        
+        calendarEvents.push(ne);
+        saveData();
+        renderCalendarEvents();
+        
+        document.getElementById('calendarEventTitle').value = '';
+        document.getElementById('calendarEventDate').value = '';
+        document.getElementById('calendarEventDescription').value = '';
+        document.getElementById('addCalendarEventFormContainer').style.display = 'none';
+        alert("Wydarzenie dodane.");
     }
-    function deleteCalendarEvent(eventId) { /* ... bez zmian ... */ 
-        const event = calendarEvents.find(e => e.id === eventId); if (!event) return;
-        if (loggedInUser.role === 'admin' || loggedInUser.id === event.createdByUserId) { if (confirm("Czy na pewno chcesz usunąć to wydarzenie z kalendarza?")) { calendarEvents = calendarEvents.filter(e => e.id !== eventId); saveData(); renderCalendarEvents(); }} 
-        else { alert("Nie masz uprawnień do usunięcia tego wydarzenia."); }
+    
+    function deleteCalendarEvent(eid) {
+        const e = calendarEvents.find(ev => ev.id === eid);
+        if(!e) return;
+        
+        if(loggedInUser.role === 'admin' || loggedInUser.id === e.createdByUserId) {
+            if(confirm("Na pewno usunąć?")) {
+                calendarEvents = calendarEvents.filter(ev => ev.id !== eid);
+                saveData();
+                renderCalendarEvents();
+            }
+        } else {
+            alert("Brak uprawnień.");
+        }
     }
 
-    function renderAdminTimetableManagement() { /* ... bez zmian ... */ 
-        const classSelect = document.getElementById('adminTimetableClassSelect'); classSelect.innerHTML = classes.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
-        const teacherSelect = document.getElementById('adminTimetableTeacherSelect'); teacherSelect.innerHTML = '<option value="">(Brak nauczyciela)</option>' + users.filter(u => u.role === 'teacher').map(t => `<option value="${t.id}">${t.name}</option>`).join('');
-        if (classes.length > 0) { classSelect.value = classes[0].id; renderAdminTimetableEditor(); } else { document.getElementById('adminTimetablePreviewContainer').innerHTML = "<p>Brak klas do zarządzania planem.</p>" }
+    function renderAdminTimetableManagement() {
+        const cs = document.getElementById('adminTimetableClassSelect');
+        cs.innerHTML = classes.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+        
+        const ts = document.getElementById('adminTimetableTeacherSelect');
+        ts.innerHTML = '<option value="">(Brak N.)</option>' + 
+            users.filter(u => u.role === 'teacher').map(t => `<option value="${t.id}">${t.name}</option>`).join('');
+            
+        if(classes.length > 0) {
+            cs.value = classes[0].id;
+            renderAdminTimetableEditor();
+        } else {
+            document.getElementById('adminTimetablePreviewContainer').innerHTML = "<p>Brak klas.</p>";
+        }
+        
         clearAdminTimetableForm();
     }
-    function clearAdminTimetableForm() { /* ... bez zmian ... */ 
-        document.getElementById('adminTimetableEntryId').value = ''; document.getElementById('adminTimetableDay').value = '1'; document.getElementById('adminTimetablePeriod').value = ''; document.getElementById('adminTimetableSubject').value = ''; document.getElementById('adminTimetableTeacherSelect').value = ''; document.getElementById('adminTimetableRoom').value = '';
+    
+    function clearAdminTimetableForm() {
+        document.getElementById('adminTimetableEntryId').value = '';
+        document.getElementById('adminTimetableDay').value = '1';
+        document.getElementById('adminTimetablePeriod').value = '';
+        document.getElementById('adminTimetableSubject').value = '';
+        document.getElementById('adminTimetableTeacherSelect').value = '';
+        document.getElementById('adminTimetableRoom').value = '';
     }
-    function renderAdminTimetableEditor() { /* ... bez zmian ... */ 
-        const classId = parseInt(document.getElementById('adminTimetableClassSelect').value); const container = document.getElementById('adminTimetablePreviewContainer'); if (!classId) { container.innerHTML = "<p>Wybierz klasę.</p>"; return; }
-        const classTimetable = timetables.filter(t => t.classId === classId); const uniquePeriods = [...new Set(classTimetable.map(item => item.period))];
-        uniquePeriods.sort((a, b) => {  const numA = parseInt(a.split(' ')[0]); const numB = parseInt(b.split(' ')[0]); if (!isNaN(numA) && !isNaN(numB)) return numA - numB; return a.localeCompare(b); });
-        let html = '<table><thead><tr><th>Okres</th>'; for (let day = 1; day <= 5; day++) { html += `<th>${daysMap[day]}</th>`; } html += '</tr></thead><tbody>';
-        uniquePeriods.forEach(period => {
-            html += `<tr><td>${period}</td>`;
-            for (let day = 1; day <= 5; day++) {
-                const entry = classTimetable.find(e => e.dayOfWeek === day && e.period === period);
-                if (entry) { const teacher = users.find(u => u.id === entry.teacherId); html += `<td onclick="loadTimetableEntryForEdit(${entry.id})"><strong>${entry.subject}</strong><br><small>${teacher ? teacher.name : 'Brak naucz.'}</small><br><small>Sala: ${entry.room || '-'}</small><br><button class="action-btn btn-delete btn-small" style="padding:2px 5px; font-size:10px;" onclick="event.stopPropagation(); deleteTimetableEntryByAdmin(${entry.id});">Usuń</button></td>`; } 
-                else { html += `<td onclick="prefillTimetableFormForAdd(${classId}, ${day}, '${period}')">-</td>`; }
-            } html += '</tr>';
-        }); html += '</tbody></table>'; if (uniquePeriods.length === 0) html = "<p>Brak planu dla tej klasy. Dodaj pierwsze pozycje.</p>";
-        container.innerHTML = html;
+    
+    function renderAdminTimetableEditor() {
+        const cid = parseInt(document.getElementById('adminTimetableClassSelect').value);
+        const c = document.getElementById('adminTimetablePreviewContainer');
+        
+        if(!cid) {
+            c.innerHTML = "<p>Wybierz klasę.</p>";
+            return;
+        }
+        
+        const ct = timetables.filter(t => t.classId === cid);
+        const up = [...new Set(ct.map(i => i.period))];
+        up.sort((a,b) => {
+            const na = parseInt(a.split(' ')[0]);
+            const nb = parseInt(b.split(' ')[0]);
+            if(!isNaN(na) && !isNaN(nb)) return na - nb;
+            return a.localeCompare(b);
+        });
+        
+        let h = '<table><thead><tr><th>Okres</th>';
+        for(let d = 1; d <= 5; d++) {
+            h += `<th>${daysMap[d]}</th>`;
+        }
+        h += '</tr></thead><tbody>';
+        
+        up.forEach(p => {
+            h += `<tr><td>${p}</td>`;
+            for(let d = 1; d <= 5; d++) {
+                const e = ct.find(en => en.dayOfWeek === d && en.period === p);
+                if(e) {
+                    const t = users.find(u => u.id === e.teacherId);
+                    h += `<td onclick="loadTimetableEntryForEdit(${e.id})">
+                        <strong>${e.subject}</strong><br>
+                        <small>${t ? t.name.split(' ')[0] : '-'}</small>
+                        <small>,S:${e.room || '-'}</small><br>
+                        <button class="action-btn btn-delete btn-small" style="padding:2px 5px;font-size:10px;" onclick="event.stopPropagation();deleteTimetableEntryByAdmin(${e.id});">X</button>
+                    </td>`;
+                } else {
+                    h += `<td onclick="prefillTimetableFormForAdd(${cid},${d},'${p}')">-</td>'`;
+                }
+            }
+            h += '</tr>';
+        });
+        
+        h += '</tbody></table>';
+        if(up.length === 0) h = "<p>Brak planu.</p>";
+        c.innerHTML = h;
     }
-    function prefillTimetableFormForAdd(classId, day, period) { /* ... bez zmian ... */ 
-        clearAdminTimetableForm(); document.getElementById('adminTimetableClassSelect').value = classId; document.getElementById('adminTimetableDay').value = day; document.getElementById('adminTimetablePeriod').value = period; document.getElementById('adminTimetableSubject').focus();
+    
+    function prefillTimetableFormForAdd(cid, d, p) {
+        clearAdminTimetableForm();
+        document.getElementById('adminTimetableClassSelect').value = cid;
+        document.getElementById('adminTimetableDay').value = d;
+        document.getElementById('adminTimetablePeriod').value = p;
+        document.getElementById('adminTimetableSubject').focus();
     }
-    function loadTimetableEntryForEdit(entryId) { /* ... bez zmian ... */ 
-        const entry = timetables.find(e => e.id === entryId); if (!entry) return;
-        document.getElementById('adminTimetableEntryId').value = entry.id; document.getElementById('adminTimetableClassSelect').value = entry.classId; document.getElementById('adminTimetableDay').value = entry.dayOfWeek; document.getElementById('adminTimetablePeriod').value = entry.period; document.getElementById('adminTimetableSubject').value = entry.subject; document.getElementById('adminTimetableTeacherSelect').value = entry.teacherId || ''; document.getElementById('adminTimetableRoom').value = entry.room || '';
-        window.scrollTo(0, document.getElementById('adminTimetableManagementSection').offsetTop); 
+    
+    function loadTimetableEntryForEdit(eid) {
+        const e = timetables.find(en => en.id === eid);
+        if(!e) return;
+        
+        document.getElementById('adminTimetableEntryId').value = e.id;
+        document.getElementById('adminTimetableClassSelect').value = e.classId;
+        document.getElementById('adminTimetableDay').value = e.dayOfWeek;
+        document.getElementById('adminTimetablePeriod').value = e.period;
+        document.getElementById('adminTimetableSubject').value = e.subject;
+        document.getElementById('adminTimetableTeacherSelect').value = e.teacherId || '';
+        document.getElementById('adminTimetableRoom').value = e.room || '';
+        
+        window.scrollTo(0, document.getElementById('adminTimetableManagementSection').offsetTop);
     }
-    function saveTimetableEntryByAdmin() { /* ... bez zmian ... */ 
-        const entryId = document.getElementById('adminTimetableEntryId').value ? parseInt(document.getElementById('adminTimetableEntryId').value) : null; const classId = parseInt(document.getElementById('adminTimetableClassSelect').value); const dayOfWeek = parseInt(document.getElementById('adminTimetableDay').value); const period = document.getElementById('adminTimetablePeriod').value.trim(); const subject = document.getElementById('adminTimetableSubject').value.trim(); const teacherId = document.getElementById('adminTimetableTeacherSelect').value ? parseInt(document.getElementById('adminTimetableTeacherSelect').value) : null; const room = document.getElementById('adminTimetableRoom').value.trim();
-        if (!classId || !period || !subject) { alert("Klasa, okres i przedmiot są wymagane!"); return; }
-        if (entryId) { const index = timetables.findIndex(e => e.id === entryId); if (index > -1) { timetables[index] = { ...timetables[index], classId, dayOfWeek, period, subject, teacherId, room }; } } 
-        else { const conflict = timetables.find(e => e.classId === classId && e.dayOfWeek === dayOfWeek && e.period === period); if(conflict) { alert("W tym czasie i dla tej klasy już istnieje wpis w planie."); return; } const newEntry = { id: getNextId(timetables), classId, dayOfWeek, period, subject, teacherId, room }; timetables.push(newEntry); }
-        saveData(); renderAdminTimetableEditor(); clearAdminTimetableForm(); alert("Plan lekcji zaktualizowany!");
+    
+    function saveTimetableEntryByAdmin() {
+        const eid = document.getElementById('adminTimetableEntryId').value ? parseInt(document.getElementById('adminTimetableEntryId').value) : null;
+        const cid = parseInt(document.getElementById('adminTimetableClassSelect').value);
+        const dow = parseInt(document.getElementById('adminTimetableDay').value);
+        const p = document.getElementById('adminTimetablePeriod').value.trim();
+        const s = document.getElementById('adminTimetableSubject').value.trim();
+        const tid = document.getElementById('adminTimetableTeacherSelect').value ? parseInt(document.getElementById('adminTimetableTeacherSelect').value) : null;
+        const r = document.getElementById('adminTimetableRoom').value.trim();
+        
+        if(!cid || !p || !s) {
+            alert("Klasa, okres i przedmiot wymagane!");
+            return;
+        }
+        
+        if(eid) {
+            const i = timetables.findIndex(e => e.id === eid);
+            if(i > -1) {
+                timetables[i] = {...timetables[i], classId: cid, dayOfWeek: dow, period: p, subject: s, teacherId: tid, room: r};
+            }
+        } else {
+            const conf = timetables.find(e => e.classId === cid && e.dayOfWeek === dow && e.period === p);
+            if(conf) {
+                alert("Wpis istnieje.");
+                return;
+            }
+            
+            const ne = {
+                id: getNextId(timetables),
+                classId: cid,
+                dayOfWeek: dow,
+                period: p,
+                subject: s,
+                teacherId: tid,
+                room: r
+            };
+            timetables.push(ne);
+        }
+        
+        saveData();
+        renderAdminTimetableEditor();
+        clearAdminTimetableForm();
+        alert("Plan zaktualizowany!");
     }
-    function deleteTimetableEntryByAdmin(entryId) { /* ... bez zmian ... */ 
-        if (confirm("Czy na pewno chcesz usunąć ten wpis z planu lekcji?")) { timetables = timetables.filter(e => e.id !== entryId); saveData(); renderAdminTimetableEditor(); }
+    
+    function deleteTimetableEntryByAdmin(eid) {
+        if(confirm("Na pewno usunąć?")) {
+            timetables = timetables.filter(e => e.id !== eid);
+            saveData();
+            renderAdminTimetableEditor();
+        }
     }
 
-    // --- NOWE FUNKCJE: USTAWIENIA I FREKWENCJA (STUDENT) ---
     function renderSettings() {
-        if (!loggedInUser) return;
+        if(!loggedInUser) return;
         document.getElementById('settingCurrentName').value = loggedInUser.name;
-        document.getElementById('settingNewName').value = ''; // Wyczyść poprzednie wpisy
+        document.getElementById('settingNewName').value = '';
     }
-
+    
     function updateUserDisplayName() {
-        if (!loggedInUser) return;
-        const newName = document.getElementById('settingNewName').value.trim();
-        if (!newName) {
-            alert("Nowa nazwa nie może być pusta."); return;
+        if(!loggedInUser) return;
+        const nn = document.getElementById('settingNewName').value.trim();
+        
+        if(!nn) {
+            alert("Nazwa nie może być pusta.");
+            return;
         }
-        if (newName === loggedInUser.name) {
-            alert("Nowa nazwa jest taka sama jak obecna."); return;
+        
+        if(nn === loggedInUser.name) {
+            alert("Nazwa taka sama.");
+            return;
         }
-
-        loggedInUser.name = newName; // Aktualizuj obiekt zalogowanego użytkownika
-        const userInArray = users.find(u => u.id === loggedInUser.id); // Znajdź użytkownika w głównej tablicy
-        if (userInArray) {
-            userInArray.name = newName; // Zaktualizuj również w głównej tablicy
+        
+        loggedInUser.name = nn;
+        const uia = users.find(u => u.id === loggedInUser.id);
+        if(uia) {
+            uia.name = nn;
         }
-
-        saveData(); // Zapisz zmiany
-
-        // Zaktualizuj interfejs użytkownika
+        
+        saveData();
+        
         document.getElementById('welcomeText').textContent = `Witaj, ${loggedInUser.name}!`;
         document.getElementById('userAvatar').textContent = loggedInUser.name.charAt(0).toUpperCase();
         document.getElementById('loggedUserName').textContent = loggedInUser.name;
-        document.getElementById('settingCurrentName').value = loggedInUser.name; 
-        document.getElementById('settingNewName').value = ''; 
-
-        alert("Nazwa wyświetlana została zaktualizowana.");
+        document.getElementById('settingCurrentName').value = loggedInUser.name;
+        document.getElementById('settingNewName').value = '';
+        
+        alert("Nazwa zaktualizowana.");
+    }
+    
+    function changePassword() {
+        const current = document.getElementById('currentPassword').value;
+        const newPass = document.getElementById('newPassword').value;
+        const confirmPass = document.getElementById('confirmNewPassword').value;
+        
+        if(!current || !newPass || !confirmPass) {
+            alert("Wypełnij wszystkie pola!");
+            return;
+        }
+        
+        if(newPass !== confirmPass) {
+            alert("Nowe hasła nie są identyczne!");
+            return;
+        }
+        
+        if(current !== loggedInUser.password) {
+            alert("Aktualne hasło jest nieprawidłowe!");
+            return;
+        }
+        
+        loggedInUser.password = newPass;
+        const userIndex = users.findIndex(u => u.id === loggedInUser.id);
+        if(userIndex > -1) {
+            users[userIndex].password = newPass;
+        }
+        
+        saveData();
+        alert("Hasło zostało zmienione!");
+        document.getElementById('currentPassword').value = '';
+        document.getElementById('newPassword').value = '';
+        document.getElementById('confirmNewPassword').value = '';
     }
     
     function renderStudentAttendance() {
         if (!loggedInUser || loggedInUser.role !== 'student') {
-             document.getElementById('studentAttendanceListContainer').innerHTML = "<p>Brak dostępu.</p>";
-             return;
+            document.getElementById('studentAttendanceListContainer').innerHTML = "<p>Brak dostępu.</p>";
+            return;
         }
+        
         const container = document.getElementById('studentAttendanceListContainer');
-        const studentAttendanceRecords = attendance
-            .filter(a => a.studentId === loggedInUser.id)
-            .sort((a, b) => new Date(b.date) - new Date(a.date)); // Najnowsze najpierw
-
+        const studentAttendanceRecords = attendance.filter(a => a.studentId === loggedInUser.id).sort((a, b) => new Date(b.date) - new Date(a.date));
+        
         if (studentAttendanceRecords.length === 0) {
-            container.innerHTML = "<p>Brak zarejestrowanej frekwencji.</p>"; return;
+            container.innerHTML = "<p>Brak frekwencji.</p>";
+            return;
         }
-
-        let html = `<table>
-                        <thead><tr><th>Data</th><th>Przedmiot/Godzina</th><th>Status</th><th>Nauczyciel</th></tr></thead>
-                        <tbody>`;
+        
+        let html = `<table><thead><tr><th>Data</th><th>Przedmiot/Lekcja</th><th>Status</th><th>Nauczyciel</th></tr></thead><tbody>`;
+        
         studentAttendanceRecords.forEach(record => {
             const teacher = users.find(u => u.id === record.teacherId);
             html += `<tr>
-                        <td>${new Date(record.date).toLocaleDateString()}</td>
-                        <td>${record.subject || 'N/A'}</td>
-                        <td>${record.status}</td>
-                        <td>${teacher ? teacher.name : 'N/A'}</td>
-                     </tr>`;
+                <td>${new Date(record.date).toLocaleDateString()}</td>
+                <td>${record.subjectLesson || 'N/A'}</td>
+                <td>${record.status}</td>
+                <td>${teacher ? teacher.name : 'N/A'}</td>
+            </tr>`;
         });
+        
         html += `</tbody></table>`;
         container.innerHTML = html;
     }
     
-    // --- ZARZĄDZANIE FREKWENCJĄ PRZEZ NAUCZYCIELA (Szkic) ---
     function renderTeacherAttendanceManagement() {
         if (!loggedInUser || loggedInUser.role !== 'teacher') return;
-
-        const classSelect = document.getElementById('attTeacherClassSelect');
-        const subjectSelect = document.getElementById('attSubjectSelect'); // Dodano
-        const dateInput = document.getElementById('attDateSelect');
-
-        // Wypełnij klasy nauczyciela
-        classSelect.innerHTML = (loggedInUser.classIds || [])
-            .map(clsId => classes.find(c => c.id === clsId))
-            .filter(c => c) // Usuń niezdefiniowane (jeśli classId nie istnieje)
-            .map(c => `<option value="${c.id}">${c.name}</option>`).join('');
         
-        // Wypełnij przedmioty nauczyciela (lub pozycje z planu dla wybranej klasy i dnia)
-        // Na razie prosta lista przedmiotów nauczyciela
-        subjectSelect.innerHTML = (loggedInUser.subjects || [])
-            .map(subj => `<option value="${subj}">${subj}</option>`).join('');
-
-
-        if (!dateInput.value) { // Ustaw domyślną datę na dzisiaj, jeśli nie ustawiona
+        const classSelect = document.getElementById('attTeacherClassSelect');
+        const dateInput = document.getElementById('attDateSelect');
+        
+        classSelect.innerHTML = (loggedInUser.classIds || []).map(clsId => classes.find(c => c.id === clsId)).filter(c => c).map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+        if (!dateInput.value) {
             dateInput.value = new Date().toISOString().split('T')[0];
         }
+        
+        populateAttSubjectSelect();
+        renderTeacherAttendanceEditor();
+    }
+    
+    function getDayOfWeekFromDate(dateString) {
+        const date = new Date(dateString);
+        return date.getDay();
+    }
 
-        renderTeacherAttendanceEditor(); // Wyrenderuj edytor dla domyślnych wartości
+    function populateAttSubjectSelect() {
+        const classId = parseInt(document.getElementById('attTeacherClassSelect').value);
+        const dateStr = document.getElementById('attDateSelect').value;
+        const subjectLessonSelect = document.getElementById('attSubjectOrLessonSelect');
+        subjectLessonSelect.innerHTML = '<option value="">-- Wybierz lekcję --</option>';
+
+        if (!classId || !dateStr) return;
+
+        const dayOfWeek = getDayOfWeekFromDate(dateStr);
+        if (dayOfWeek === 0 || dayOfWeek === 6) return;
+
+        const lessonsForDay = timetables.filter(t => 
+            t.classId === classId && 
+            t.dayOfWeek === dayOfWeek && 
+            (t.teacherId === loggedInUser.id || t.teacherId === null || loggedInUser.role === 'admin')
+        ).sort((a,b) => {
+            const numA = parseInt(a.period.split(' ')[0]);
+            const numB = parseInt(b.period.split(' ')[0]);
+            if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
+            return a.period.localeCompare(b.period);
+        });
+        
+        lessonsForDay.forEach(lesson => {
+            const teacher = users.find(u => u.id === lesson.teacherId);
+            const optionText = `${lesson.period} - ${lesson.subject} ${teacher ? '('+teacher.name.split(' ')[0]+')' : ''}`;
+            const optionValue = `${lesson.subject}_${lesson.period}`;
+            subjectLessonSelect.innerHTML += `<option value="${optionValue}">${optionText}</option>`;
+        });
     }
 
     function renderTeacherAttendanceEditor() {
         const classId = parseInt(document.getElementById('attTeacherClassSelect').value);
         const date = document.getElementById('attDateSelect').value;
-        const subject = document.getElementById('attSubjectSelect').value; // Dodano
+        const subjectLessonCombined = document.getElementById('attSubjectOrLessonSelect').value;
         const container = document.getElementById('teacherAttendanceEditorContainer');
 
-        if (!classId || !date || !subject) {
-            container.innerHTML = "<p>Wybierz klasę, datę i przedmiot/godzinę, aby zarządzać frekwencją.</p>";
-            return;
-        }
-
-        const studentsInClass = users.filter(u => u.role === 'student' && u.classId === classId);
-        if (studentsInClass.length === 0) {
-            container.innerHTML = "<p>Brak uczniów w wybranej klasie.</p>";
+        if (!classId || !date || !subjectLessonCombined) {
+            container.innerHTML = "<p>Wybierz klasę, datę i lekcję, aby zarządzać frekwencją.</p>";
             return;
         }
         
-        let html = `<h4>Uczniowie w klasie ${classes.find(c=>c.id === classId)?.name || ''} - ${subject} (${date})</h4>`;
+        const studentsInClass = users.filter(u => u.role === 'student' && u.classId === classId);
+        if (studentsInClass.length === 0) {
+            container.innerHTML = "<p>Brak uczniów w klasie.</p>";
+            return;
+        }
+        
+        let html = `<h4>Uczniowie w klasie ${classes.find(c=>c.id === classId)?.name || ''} - ${subjectLessonCombined.replace('_', ' ')} (${date})</h4>`;
         html += '<table><thead><tr><th>Uczeń</th><th>Status Frekwencji</th></tr></thead><tbody>';
-
+        
         studentsInClass.forEach(student => {
-            const currentAtt = attendance.find(a => a.studentId === student.id && a.date === date && a.subject === subject);
-            const currentStatus = currentAtt ? currentAtt.status : 'obecny'; // Domyślnie obecny
-
+            const currentAtt = attendance.find(a => a.studentId === student.id && a.date === date && a.subjectLesson === subjectLessonCombined);
+            const currentStatus = currentAtt ? currentAtt.status : 'obecny';
+            
             html += `<tr>
-                        <td>${student.name}</td>
-                        <td>
-                            <select data-student-id="${student.id}" class="attendance-status-select">
-                                <option value="obecny" ${currentStatus === 'obecny' ? 'selected' : ''}>Obecny</option>
-                                <option value="spóźniony" ${currentStatus === 'spóźniony' ? 'selected' : ''}>Spóźniony</option>
-                                <option value="nieobecny" ${currentStatus === 'nieobecny' ? 'selected' : ''}>Nieobecny</option>
-                                <option value="nieobecny (uspraw.)" ${currentStatus === 'nieobecny (uspraw.)' ? 'selected' : ''}>Nieobecny (uspraw.)</option>
-                                <option value="zwolniony" ${currentStatus === 'zwolniony' ? 'selected' : ''}>Zwolniony</option>
-                            </select>
-                        </td>
-                     </tr>`;
+                <td>${student.name}</td>
+                <td>
+                    <select data-student-id="${student.id}" class="attendance-status-select">
+                        <option value="obecny" ${currentStatus === 'obecny' ? 'selected' : ''}>Obecny</option>
+                        <option value="spóźniony" ${currentStatus === 'spóźniony' ? 'selected' : ''}>Spóźniony</option>
+                        <option value="nieobecny" ${currentStatus === 'nieobecny' ? 'selected' : ''}>Nieobecny</option>
+                        <option value="nieobecny (uspraw.)" ${currentStatus === 'nieobecny (uspraw.)' ? 'selected' : ''}>Nieob. (uspraw.)</option>
+                        <option value="zwolniony" ${currentStatus === 'zwolniony' ? 'selected' : ''}>Zwolniony</option>
+                    </select>
+                </td>
+            </tr>`;
         });
+        
         html += '</tbody></table>';
         container.innerHTML = html;
     }
 
     function saveTeacherAttendanceChanges() {
-        const classId = parseInt(document.getElementById('attTeacherClassSelect').value);
         const date = document.getElementById('attDateSelect').value;
-        const subject = document.getElementById('attSubjectSelect').value; // Dodano
-
-        if (!classId || !date || !subject) {
-            alert("Proszę wybrać klasę, datę i przedmiot."); return;
+        const subjectLessonCombined = document.getElementById('attSubjectOrLessonSelect').value;
+        if (!date || !subjectLessonCombined) {
+            alert("Proszę wybrać datę i lekcję.");
+            return;
         }
 
         const statusSelects = document.querySelectorAll('.attendance-status-select');
         let changesMade = 0;
+        
         statusSelects.forEach(select => {
             const studentId = parseInt(select.dataset.studentId);
             const newStatus = select.value;
-
-            // Znajdź istniejący wpis lub stwórz nowy
-            let attRecord = attendance.find(a => a.studentId === studentId && a.date === date && a.subject === subject);
+            
+            let attRecord = attendance.find(a => a.studentId === studentId && a.date === date && a.subjectLesson === subjectLessonCombined);
+            
             if (attRecord) {
                 if (attRecord.status !== newStatus) {
                     attRecord.status = newStatus;
-                    attRecord.teacherId = loggedInUser.id; // Upewnij się, że nauczyciel jest przypisany
+                    attRecord.teacherId = loggedInUser.id;
                     changesMade++;
                 }
             } else {
                 attendance.push({
                     id: getNextId(attendance),
-                    studentId: studentId,
-                    date: date,
-                    subject: subject,
+                    studentId,
+                    date,
+                    subjectLesson: subjectLessonCombined,
                     status: newStatus,
                     teacherId: loggedInUser.id
                 });
                 changesMade++;
             }
         });
-
+        
         if (changesMade > 0) {
             saveData();
-            alert("Zmiany w frekwencji zostały zapisane.");
-            renderTeacherAttendanceEditor(); // Odśwież widok
+            alert("Zmiany w frekwencji zapisane.");
+            renderTeacherAttendanceEditor();
         } else {
-            alert("Nie wprowadzono żadnych zmian w frekwencji.");
+            alert("Nie wprowadzono zmian.");
         }
     }
 
+    // --- MOTYW ---
+    function toggleTheme() {
+        document.body.classList.toggle('dark-mode');
+        const currentTheme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+        localStorage.setItem('eDziennik_theme', currentTheme);
+        updateThemeToggleButton(currentTheme);
+    }
+    
+    function updateThemeToggleButton(theme) {
+        const btn = document.getElementById('themeToggleBtn');
+        const settingsBtn = document.getElementById('settingsThemeToggleBtn');
+        if (btn) {
+            btn.innerHTML = theme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        }
+        if (settingsBtn) {
+            settingsBtn.textContent = theme === 'dark' ? 'Zmień na Jasny' : 'Zmień na Ciemny';
+        }
+    }
+    
+    // --- ANKIETY (POLLS) ---
+    let currentViewingPollId = null;
+    
+    function renderPollsList() {
+        const container = document.getElementById('pollsListContainer');
+        const visiblePolls = polls.filter(p => {
+            if (p.audience === 'all_students' && loggedInUser.role === 'student') return true;
+            if (p.audience === 'all_teachers' && loggedInUser.role === 'teacher') return true;
+            if (loggedInUser.role === 'admin') return true;
+            return false;
+        });
+
+        if (visiblePolls.length === 0) {
+            container.innerHTML = "<p>Brak dostępnych ankiet.</p>";
+            return;
+        }
+        
+        container.innerHTML = visiblePolls.map(p => 
+            `<div class="panel message-item" onclick="viewPoll(${p.id})">
+                <h4>${p.title}</h4>
+                <p><small>Status: ${p.isOpen ? 'Otwarta' : 'Zamknięta'}</small></p>
+            </div>`
+        ).join('');
+    }
+
+    function viewPoll(pollId) {
+        currentViewingPollId = pollId;
+        const poll = polls.find(p => p.id === pollId);
+        if (!poll) return;
+
+        document.getElementById('pollsListContainer').style.display = 'none';
+        document.getElementById('pollViewContainer').style.display = 'block';
+        document.getElementById('pollViewTitle').textContent = poll.title;
+        
+        let questionsHtml = '';
+        poll.questions.forEach(q => {
+            questionsHtml += `<div class="panel" style="margin-top:10px;"><h5>${q.q_id}. ${q.text}</h5>`;
+            q.options.forEach(opt => {
+                if (q.type === "single") {
+                    questionsHtml += `<div><input type="radio" name="poll_q_${q.q_id}" id="opt_${opt.o_id}" value="${opt.o_id}"> <label for="opt_${opt.o_id}">${opt.text}</label></div>`;
+                } else if (q.type === "multiple") {
+                     questionsHtml += `<div><input type="checkbox" name="poll_q_${q.q_id}" id="opt_${opt.o_id}" value="${opt.o_id}"> <label for="opt_${opt.o_id}">${opt.text}</label></div>`;
+                }
+            });
+            questionsHtml += `</div>`;
+        });
+        
+        document.getElementById('pollViewQuestions').innerHTML = questionsHtml;
+        document.querySelector('#pollViewContainer button[onclick="submitPoll()"]').style.display = (loggedInUser.role === 'student' && poll.isOpen) ? 'block' : 'none';
+    }
+
+    function hidePollView() {
+        document.getElementById('pollViewContainer').style.display = 'none';
+        document.getElementById('pollsListContainer').style.display = 'block';
+        currentViewingPollId = null;
+        renderPollsList();
+    }
+    
+    function submitPoll() {
+        if (!currentViewingPollId) return;
+        const poll = polls.find(p => p.id === currentViewingPollId);
+        if (!poll || !poll.isOpen) {
+            alert("Ankieta jest zamknięta lub nie istnieje.");
+            return;
+        }
+
+        let answered = false;
+        poll.questions.forEach(q => {
+            const inputs = document.querySelectorAll(`input[name="poll_q_${q.q_id}"]:checked`);
+            if (inputs.length > 0) {
+                answered = true;
+                inputs.forEach(input => {
+                    console.log(`Odpowiedź na pytanie ${q.q_id}: opcja ${input.value}`);
+                });
+            }
+        });
+        
+        if (!answered) {
+            alert("Proszę odpowiedzieć na przynajmniej jedno pytanie.");
+            return;
+        }
+
+        alert("Dziękujemy za wypełnienie ankiety! (Odpowiedzi zostały zasymulowane)");
+        hidePollView();
+    }
+
+    function renderAdminPollManagement() {
+        const container = document.getElementById('adminPollsListContainer');
+        container.innerHTML = '<h3>Istniejące Ankiety (tytuły):</h3>' + 
+            polls.map(p => 
+                `<p>${p.title} (ID: ${p.id}) <button class="action-btn btn-delete btn-small" style="padding:2px 5px; font-size:10px;" onclick="deletePollByAdmin(${p.id})">Usuń</button></p>`
+            ).join('');
+    }
+
+    function addPollByAdmin() {
+        const title = document.getElementById('adminPollTitle').value.trim();
+        if (!title) {
+            alert("Tytuł ankiety jest wymagany!");
+            return;
+        }
+        
+        const newPoll = {
+            id: getNextId(polls),
+            title: title,
+            questions: JSON.parse(JSON.stringify(initialPolls[0].questions)),
+            createdByUserId: loggedInUser.id,
+            audience: "all_students",
+            isOpen: true
+        };
+        
+        polls.push(newPoll);
+        saveData();
+        alert("Ankieta (tytuł) dodana. Pytania są przykładowe.");
+        document.getElementById('adminPollTitle').value = '';
+        renderAdminPollManagement();
+    }
+    
+    function deletePollByAdmin(pollId) {
+        if(confirm(`Na pewno usunąć ankietę ID ${pollId}?`)) {
+            polls = polls.filter(p => p.id !== pollId);
+            saveData();
+            renderAdminPollManagement();
+            renderPollsList();
+        }
+    }
+
+    // --- KSIĄŻKI / MATERIAŁY ---
+    function renderBooksList() {
+        const container = document.getElementById('booksListContainer');
+        if (books.length === 0) {
+            container.innerHTML = "<p>Brak dodanych książek lub materiałów.</p>";
+            return;
+        }
+        
+        let html = '<h3>Lista Dostępnych Książek i Materiałów:</h3>';
+        books.forEach(book => {
+            html += `<div class="panel">
+                <h4>${book.title} ${book.author ? '('+book.author+')':''}</h4>
+                <p><strong>Przedmiot:</strong> ${book.subject || 'Ogólne'}</p>
+                <p>${book.description.replace(/\n/g, '<br>')}</p>
+                <p><small>Dodał: ${users.find(u=>u.id===book.addedByUserId)?.name || 'System'}</small></p>
+            </div>`;
+        });
+        
+        container.innerHTML = html;
+    }
+
+    function renderAdminBookManagement() {
+        const container = document.getElementById('adminBooksListManagementContainer');
+        container.innerHTML = '<h3>Dodane pozycje:</h3>' + 
+            books.map(b =>
+                `<p>${b.title} - ${b.author || 'Brak autora'} (Przedmiot: ${b.subject || 'N/A'}) <button class="action-btn btn-delete btn-small" style="padding:2px 5px; font-size:10px;" onclick="deleteBookByAdmin(${b.id})">Usuń</button></p>`
+            ).join('');
+    }
+    
+    function addBookByAdmin() {
+        const title = document.getElementById('adminBookTitle').value.trim();
+        const author = document.getElementById('adminBookAuthor').value.trim();
+        const subject = document.getElementById('adminBookSubject').value.trim();
+        const description = document.getElementById('adminBookDescription').value.trim();
+
+        if (!title) {
+            alert("Tytuł jest wymagany!");
+            return;
+        }
+        
+        const newBook = {
+            id: getNextId(books),
+            title,
+            author,
+            subject,
+            description,
+            addedByUserId: loggedInUser.id
+        };
+        
+        books.push(newBook);
+        saveData();
+        alert("Książka/materiał dodany.");
+        
+        ['adminBookTitle', 'adminBookAuthor', 'adminBookSubject', 'adminBookDescription'].forEach(id => {
+            document.getElementById(id).value = '';
+        });
+        
+        renderAdminBookManagement();
+    }
+    
+    function deleteBookByAdmin(bookId) {
+         if(confirm(`Na pewno usunąć pozycję ID ${bookId}?`)) {
+            books = books.filter(b => b.id !== bookId);
+            saveData();
+            renderAdminBookManagement();
+            renderBooksList();
+        }
+    }
 
     // --- INITIALIZATION ---
     document.addEventListener('DOMContentLoaded', () => {
         loadData(); 
         checkAuth(); 
-
-        const passwordField = document.getElementById('password');
-        if (passwordField) { 
-             passwordField.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    if (document.getElementById('loginPage').style.display === 'flex' || document.getElementById('loginPage').style.display === '') {
-                         login();
+        
+        const pf = document.getElementById('password');
+        if(pf) {
+            pf.addEventListener('keypress', function(e) {
+                if(e.key === 'Enter') {
+                    if(document.getElementById('loginPage').style.display === 'flex' || 
+                       document.getElementById('loginPage').style.display === '') {
+                        login();
                     }
                 }
             });
         }
     });
-
     </script>
 </body>
 </html>
