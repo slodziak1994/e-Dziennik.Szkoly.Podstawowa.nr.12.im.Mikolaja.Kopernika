@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Czy mnie kochasz, Zuzia?</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            text-align: center;
+            background-color: #fff0f5;
+            padding-top: 30px;
+            background-image: url('https://i.pinimg.com/originals/2f/3e/2e/2f3e2e5a8eb1a9e93a2f6f6e6b5a8a9a.jpg');
+            background-size: cover;
+        }
+        h1 {
+            color: #ff1493;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            font-size: 2.5em;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.85);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        button {
+            padding: 12px 30px;
+            font-size: 20px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        #yes {
+            background-color: #ff69b4;
+            color: white;
+        }
+        #yes:hover {
+            background-color: #ff1493;
+            transform: scale(1.05);
+        }
+        #no {
+            background-color: #9370db;
+            color: white;
+            position: relative;
+            transition: all 0.1s;
+        }
+        #no:hover {
+            background-color: #8a2be2;
+        }
+        #message {
+            margin-top: 30px;
+            font-size: 28px;
+            color: #ff1493;
+            font-weight: bold;
+            height: 40px;
+        }
+        #kitten {
+            margin-top: 30px;
+            max-width: 300px;
+            border-radius: 15px;
+            display: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .hearts {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            color: #ff69b4;
+            animation: float 4s ease-in-out infinite;
+            opacity: 0;
+        }
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hearts" id="hearts"></div>
+    <div class="container">
+        <h1>Czy mnie kochasz, Zuzia? ❤️</h1>
+        <div class="buttons">
+            <button id="yes">Tak! 😊</button>
+            <button id="no">Nie... 😢</button>
+        </div>
+        <div id="message"></div>
+        <img id="kitten" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWZ2Z2J0d3VzY2U5bGZ4dXJ4bG1tZ3JmYjV6eW5xZzV1bW5iZGZ5dyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oriO0OEd9QIDdllqo/giphy.gif" alt="Słodki kotek">
+    </div>
+
+    <script>
+        const yesButton = document.getElementById('yes');
+        const noButton = document.getElementById('no');
+        const message = document.getElementById('message');
+        const kitten = document.getElementById('kitten');
+        const heartsContainer = document.getElementById('hearts');
+        
+        yesButton.addEventListener('click', function() {
+            message.innerHTML = 'Ja ciebie też kocham! ❤️❤️❤️';
+            noButton.style.display = 'none';
+            kitten.style.display = 'block';
+            yesButton.style.fontSize = '24px';
+            yesButton.style.padding = '15px 40px';
+            
+            // Tworzenie serduszek
+            for(let i = 0; i < 50; i++) {
+                createHeart();
+            }
+        });
+        
+        noButton.addEventListener('mouseover', function() {
+            // Losowe pozycje przycisku "Nie"
+            const x = Math.random() * (window.innerWidth - 200);
+            const y = Math.random() * (window.innerHeight - 100);
+            
+            noButton.style.position = 'absolute';
+            noButton.style.left = x + 'px';
+            noButton.style.top = y + 'px';
+            
+            // Zwiększanie rozmiaru przycisku "Tak"
+            const currentSize = parseInt(window.getComputedStyle(yesButton).fontSize);
+            yesButton.style.fontSize = (currentSize + 2) + 'px';
+        });
+        
+        noButton.addEventListener('click', function() {
+            // Jeśli jednak uda się kliknąć "Nie"
+            message.textContent = 'Spróbuj jeszcze raz! Proszę! 🥺';
+        });
+        
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.top = Math.random() * 100 + 'vh';
+            heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            heart.style.animationDelay = Math.random() * 2 + 's';
+            
+            heartsContainer.appendChild(heart);
+            
+            setTimeout(() => {
+                heart.remove();
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
